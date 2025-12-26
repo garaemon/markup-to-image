@@ -20,10 +20,9 @@ interface CodeBlockProps {
     inline?: boolean;
     className?: string;
     children?: React.ReactNode;
-    [key: string]: unknown;
 }
 
-const CodeBlock = ({ inline, className, children, ...props }: CodeBlockProps) => {
+const CodeBlock = ({ inline, className, children, ...props }: any) => {
   const match = /language-(\w+)/.exec(className || '');
   const lang = match ? match[1] : 'text';
   const code = String(children).replace(/\n$/, '');
