@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button"
-import { Share2 } from "lucide-react"
+import { Share2, Github } from "lucide-react"
 
 interface HeaderProps {
   onShare: () => void
@@ -14,7 +14,12 @@ export function Header({ onShare }: HeaderProps) {
         </div>
         <h1 className="text-xl font-bold">Markup to Image</h1>
       </div>
-      <div>
+      <div className="flex items-center gap-2">
+         <Button variant="ghost" size="icon" asChild>
+           <a href="https://github.com/garaemon/markup-to-image" target="_blank" rel="noopener noreferrer">
+             <Github className="w-5 h-5" />
+           </a>
+         </Button>
          <Button variant="outline" size="sm" onClick={onShare}>
            <Share2 className="w-4 h-4 mr-2" />
            Share
