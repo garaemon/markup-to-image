@@ -38,7 +38,7 @@ export function MarkupPreview({ state }: MarkupPreviewProps) {
       toast.success("Copied to clipboard as PNG")
     } catch (e) {
       console.error(e)
-      toast.error("Failed to copy image")
+      toast.error(e instanceof Error ? e.message : "Failed to copy image")
     }
   }
 
