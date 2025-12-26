@@ -7,7 +7,7 @@ import { CodeRenderer } from "./renderers/CodeRenderer"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Download, Copy, FileCode } from "lucide-react"
-import { toPng, toSvg } from 'html-to-image';
+import { toPng, toSvg, toBlob } from 'html-to-image';
 import { toast } from "sonner"
 
 interface MarkupPreviewProps {
@@ -22,8 +22,12 @@ export function MarkupPreview({ state }: MarkupPreviewProps) {
     try {
       // html-to-image sometimes needs a little delay or multiple tries for complex layouts,
       // but usually works fine.
-      const dataUrl = await toPng(previewRef.current, { pixelRatio: 2, backgroundColor: state.transparent ? undefined : (state.theme === 'dark' ? '#000' : '#fff') })
-      const blob = await (await fetch(dataUrl)).blob()
+      const blob = await toBlob(previewRef.current, { pixelRatio: 2, backgroundColor: state.transparent ? undefined : (state.theme === 'dark' ? '#000' : '#fff') })
+      
+      if (!blob) {
+        throw new Error("Failed to generate image blob")
+      }
+      
       await navigator.clipboard.write([
         new ClipboardItem({ 'image/png': blob })
       ])

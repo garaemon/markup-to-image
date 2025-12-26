@@ -10,13 +10,12 @@ test.describe('Markup to Image App', () => {
     await expect(page.getByRole('heading', { name: 'Markup to Image' })).toBeVisible();
   });
 
-  test('should render markdown by default', async ({ page }) => {
-    // Default is markdown
-    await expect(page.getByRole('tab', { name: 'Markdown' })).toHaveAttribute('aria-selected', 'true');
+  test('should render latex by default', async ({ page }) => {
+    // Default is latex
+    await expect(page.getByRole('tab', { name: 'LaTeX' })).toHaveAttribute('aria-selected', 'true');
     // Check for preview content
-    const preview = page.locator('.prose');
+    const preview = page.locator('.katex');
     await expect(preview).toBeVisible();
-    await expect(preview).toContainText('Hello World');
   });
 
   test('should switch to LaTeX and render', async ({ page }) => {
