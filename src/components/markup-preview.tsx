@@ -28,6 +28,10 @@ export function MarkupPreview({ state }: MarkupPreviewProps) {
         throw new Error("Failed to generate image blob")
       }
       
+      if (!navigator.clipboard?.write) {
+        throw new Error("Clipboard access is not available. Please make sure you are using HTTPS.")
+      }
+      
       await navigator.clipboard.write([
         new ClipboardItem({ 'image/png': blob })
       ])
