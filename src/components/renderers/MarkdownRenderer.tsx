@@ -16,12 +16,7 @@ function getHighlighter() {
   return highlighterPromise;
 }
 
-interface CodeBlockProps {
-    inline?: boolean;
-    className?: string;
-    children?: React.ReactNode;
-}
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const CodeBlock = ({ inline, className, children, ...props }: any) => {
   const match = /language-(\w+)/.exec(className || '');
   const lang = match ? match[1] : 'text';

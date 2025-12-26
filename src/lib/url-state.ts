@@ -13,8 +13,8 @@ export interface MarkupState {
 }
 
 export const defaultState: MarkupState = {
-  language: 'markdown',
-  content: '# Hello World',
+  language: 'latex',
+  content: 'c = \\sqrt{a^2 + b^2}',
   padding: 32,
   borderRadius: 16,
   transparent: false,

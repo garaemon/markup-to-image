@@ -24,9 +24,9 @@ export function MarkupEditor({ state, onChange }: MarkupEditorProps) {
           className="w-full"
         >
           <TabsList className="w-full">
-            <TabsTrigger value="markdown" className="flex-1">Markdown</TabsTrigger>
-            <TabsTrigger value="mermaid" className="flex-1">Mermaid</TabsTrigger>
             <TabsTrigger value="latex" className="flex-1">LaTeX</TabsTrigger>
+            <TabsTrigger value="mermaid" className="flex-1">Mermaid</TabsTrigger>
+            <TabsTrigger value="markdown" className="flex-1">Markdown</TabsTrigger>
           </TabsList>
         </Tabs>
       </div>
