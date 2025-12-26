@@ -6,7 +6,7 @@ import { Switch } from "@/components/ui/switch"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Button } from "@/components/ui/button"
 import { MarkupState, Language, Theme } from "@/lib/url-state"
-import { EXAMPLES } from "@/lib/examples"
+import { EXAMPLES, CODE_EXAMPLES } from "@/lib/examples"
 import { SUPPORTED_LANGUAGES } from "@/lib/highlighter"
 
 interface MarkupEditorProps {
@@ -15,6 +15,10 @@ interface MarkupEditorProps {
 }
 
 export function MarkupEditor({ state, onChange }: MarkupEditorProps) {
+  const currentExamples = state.language === 'code' 
+    ? (CODE_EXAMPLES[state.codeLanguage] || [])
+    : EXAMPLES[state.language];
+
   return (
     <div className="flex flex-col gap-6">
       <div className="space-y-4">
@@ -54,7 +58,7 @@ export function MarkupEditor({ state, onChange }: MarkupEditorProps) {
                  </SelectContent>
                </Select>
             )}
-            {EXAMPLES[state.language].map((example) => (
+            {currentExamples.map((example) => (
               <Button
                 key={example.name}
                 variant="outline"
