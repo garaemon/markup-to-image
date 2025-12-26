@@ -8,19 +8,19 @@ export const EXAMPLES: Record<Language, { name: string; content: string }[]> = {
     },
     {
       name: "Maxwell",
-      content: `\begin{aligned}
-\nabla \cdot \mathbf{E} &= \frac{\rho}{\varepsilon_0} \\
-\nabla \cdot \mathbf{B} &= 0 \\
-\nabla \times \mathbf{E} &= -\frac{\partial \mathbf{B}}{\partial t} \\
-\nabla \times \mathbf{B} &= \mu_0\left(\mathbf{J} + \varepsilon_0 \frac{\partial \mathbf{E}}{\partial t}\right)
-\end{aligned}`
+      content: `\\begin{aligned}
+\\nabla \\cdot \\mathbf{E} &= \\frac{\\rho}{\\varepsilon_0} \\\\
+\\nabla \\cdot \\mathbf{B} &= 0 \\\\
+\\nabla \\times \\mathbf{E} &= -\\frac{\\partial \\mathbf{B}}{\\partial t} \\\\
+\\nabla \\times \\mathbf{B} &= \\mu_0\\left(\\mathbf{J} + \\varepsilon_0 \\frac{\\partial \\mathbf{E}}{\\partial t}\\right)
+\\end{aligned}`
     },
     {
         name: "Matrix",
-        content: `A = \begin{pmatrix}
-a & b \\
+        content: `A = \\begin{pmatrix}
+a & b \\\\
 c & d
-\end{pmatrix}`
+\\end{pmatrix}`
     }
   ],
   mermaid: [
