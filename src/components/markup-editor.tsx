@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Button } from "@/components/ui/button"
 import { MarkupState, Language, Theme } from "@/lib/url-state"
 import { EXAMPLES } from "@/lib/examples"
+import { SUPPORTED_LANGUAGES } from "@/lib/highlighter"
 
 interface MarkupEditorProps {
   state: MarkupState
@@ -36,6 +37,23 @@ export function MarkupEditor({ state, onChange }: MarkupEditorProps) {
         <div className="flex justify-between items-center">
           <Label>Content</Label>
           <div className="flex gap-2">
+            {state.language === 'code' && (
+               <Select
+                 value={state.codeLanguage}
+                 onValueChange={(v) => onChange({ codeLanguage: v })}
+               >
+                 <SelectTrigger className="w-[140px] h-8 text-xs">
+                   <SelectValue />
+                 </SelectTrigger>
+                 <SelectContent>
+                   {SUPPORTED_LANGUAGES.map((lang) => (
+                     <SelectItem key={lang} value={lang}>
+                       {lang}
+                     </SelectItem>
+                   ))}
+                 </SelectContent>
+               </Select>
+            )}
             {EXAMPLES[state.language].map((example) => (
               <Button
                 key={example.name}

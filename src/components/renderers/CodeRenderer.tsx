@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getHighlighter } from '@/lib/highlighter';
 
-export function CodeRenderer({ content, theme }: { content: string, theme: 'light' | 'dark' }) {
+export function CodeRenderer({ content, language, theme }: { content: string, language: string, theme: 'light' | 'dark' }) {
   const [html, setHtml] = useState<string | null>(null);
 
   useEffect(() => {
@@ -9,11 +9,8 @@ export function CodeRenderer({ content, theme }: { content: string, theme: 'ligh
     getHighlighter().then(highlighter => {
        if (!isMounted) return;
        try {
-         // Default to typescript for now as we don't have language selector for Code tab yet
-         const targetLang = 'typescript';
-         
          const out = highlighter.codeToHtml(content, {
-           lang: targetLang,
+           lang: language,
            theme: theme === 'dark' ? 'github-dark' : 'github-light'
          });
          setHtml(out);
@@ -23,7 +20,7 @@ export function CodeRenderer({ content, theme }: { content: string, theme: 'ligh
        }
     });
     return () => { isMounted = false; };
-  }, [content, theme]);
+  }, [content, language, theme]);
 
   if (!html) {
     return <pre className="font-mono text-sm p-4"><code>{content}</code></pre>;
