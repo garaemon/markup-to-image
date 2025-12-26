@@ -42,6 +42,26 @@ export function MarkupPreview({ state }: MarkupPreviewProps) {
     }
   }
 
+  const handleCopySvg = async () => {
+    if (!previewRef.current) return
+    try {
+      const dataUrl = await toSvg(previewRef.current, { backgroundColor: state.transparent ? undefined : (state.theme === 'dark' ? '#000' : '#fff') })
+      const [header, content] = dataUrl.split(',')
+      let svgString: string
+      if (header.includes('base64')) {
+        svgString = atob(content)
+      } else {
+        svgString = decodeURIComponent(content)
+      }
+      
+      await navigator.clipboard.writeText(svgString)
+      toast.success("Copied to clipboard as SVG")
+    } catch (e) {
+      console.error(e)
+      toast.error("Failed to copy SVG")
+    }
+  }
+
   const handleDownloadPng = async () => {
     if (!previewRef.current) return
     try {
@@ -77,6 +97,9 @@ export function MarkupPreview({ state }: MarkupPreviewProps) {
         <div className="flex justify-end gap-2">
             <Button size="sm" variant="secondary" onClick={handleCopyPng}>
                 <Copy className="w-4 h-4 mr-2" /> Copy PNG
+            </Button>
+            <Button size="sm" variant="secondary" onClick={handleCopySvg}>
+                <FileCode className="w-4 h-4 mr-2" /> Copy SVG
             </Button>
             <Button size="sm" variant="outline" onClick={handleDownloadPng}>
                 <Download className="w-4 h-4 mr-2" /> PNG
