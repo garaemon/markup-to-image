@@ -12,6 +12,10 @@ function MarkupApp() {
   const { state, updateState, isLoaded } = useMarkupState();
 
   const handleShare = () => {
+    if (!navigator.clipboard) {
+      toast.error("Clipboard access not available");
+      return;
+    }
     navigator.clipboard.writeText(window.location.href);
     toast.success("Link copied to clipboard");
   };

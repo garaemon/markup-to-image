@@ -28,13 +28,17 @@ export function MarkupPreview({ state }: MarkupPreviewProps) {
         throw new Error("Failed to generate image blob")
       }
       
+      if (!navigator.clipboard?.write) {
+        throw new Error("Clipboard access is not available. Please make sure you are using HTTPS.")
+      }
+      
       await navigator.clipboard.write([
         new ClipboardItem({ 'image/png': blob })
       ])
       toast.success("Copied to clipboard as PNG")
     } catch (e) {
       console.error(e)
-      toast.error("Failed to copy image")
+      toast.error(e instanceof Error ? e.message : "Failed to copy image")
     }
   }
 

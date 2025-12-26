@@ -4,23 +4,23 @@ export const EXAMPLES: Record<Language, { name: string; content: string }[]> = {
   latex: [
     {
       name: "Pythagorean",
-      content: `c = \sqrt{a^2 + b^2}`
+      content: `c = \\sqrt{a^2 + b^2}`
     },
     {
       name: "Maxwell",
-      content: `\begin{aligned}
-\nabla \cdot \mathbf{E} &= \frac{\rho}{\varepsilon_0} \\
-\nabla \cdot \mathbf{B} &= 0 \\
-\nabla \times \mathbf{E} &= -\frac{\partial \mathbf{B}}{\partial t} \\
-\nabla \times \mathbf{B} &= \mu_0\left(\mathbf{J} + \varepsilon_0 \frac{\partial \mathbf{E}}{\partial t}\right)
-\end{aligned}`
+      content: `\\begin{aligned}
+\\nabla \\cdot \\mathbf{E} &= \\frac{\\rho}{\\varepsilon_0} \\\\
+\\nabla \\cdot \\mathbf{B} &= 0 \\\\
+\\nabla \\times \\mathbf{E} &= -\\frac{\\partial \\mathbf{B}}{\\partial t} \\\\
+\\nabla \\times \\mathbf{B} &= \\mu_0\\left(\\mathbf{J} + \\varepsilon_0 \\frac{\\partial \\mathbf{E}}{\\partial t}\\right)
+\\end{aligned}`
     },
     {
         name: "Matrix",
-        content: `A = \begin{pmatrix}
-a & b \\
+        content: `A = \\begin{pmatrix}
+a & b \\\\
 c & d
-\end{pmatrix}`
+\\end{pmatrix}`
     }
   ],
   mermaid: [
@@ -58,10 +58,10 @@ This is a **markdown** example.
 - List item 1
 - List item 2
 
-\
-```javascript
+\\
+\`\`\`javascript
 console.log('Hello');
-```\
+\`\`\`\\
 `
     },
     {
@@ -100,7 +100,7 @@ export const CODE_EXAMPLES: Record<string, { name: string; content: string }[]> 
 }
 
 function printUser(user: User) {
-  console.log(`\${user.name} (\${user.role})`);
+  console.log(\`\${user.name} (\${user.role})\`);
 }`
     },
     {
