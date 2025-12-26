@@ -1,6 +1,6 @@
 import LZString from 'lz-string';
 
-export type Language = 'latex' | 'mermaid' | 'markdown';
+export type Language = 'latex' | 'mermaid' | 'markdown' | 'code';
 export type Theme = 'light' | 'dark';
 
 export interface MarkupState {
@@ -41,7 +41,7 @@ export function decodeState(searchParams: URLSearchParams): MarkupState {
   const h = searchParams.get('h') as Theme;
 
   return {
-    language: ['latex', 'mermaid', 'markdown'].includes(l) ? l : defaultState.language,
+    language: ['latex', 'mermaid', 'markdown', 'code'].includes(l) ? l : defaultState.language,
     content: c ? LZString.decompressFromEncodedURIComponent(c) || defaultState.content : defaultState.content,
     padding: p ? parseInt(p, 10) : defaultState.padding,
     borderRadius: r ? parseInt(r, 10) : defaultState.borderRadius,

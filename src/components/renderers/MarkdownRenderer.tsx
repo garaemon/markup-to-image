@@ -1,20 +1,7 @@
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { useEffect, useState } from 'react';
-import { createHighlighter, Highlighter } from 'shiki';
-
-// Highlighter singleton
-let highlighterPromise: Promise<Highlighter> | null = null;
-
-function getHighlighter() {
-  if (!highlighterPromise) {
-    highlighterPromise = createHighlighter({
-      themes: ['github-light', 'github-dark', 'dracula'],
-      langs: ['javascript', 'typescript', 'python', 'json', 'html', 'css', 'bash', 'markdown', 'yaml', 'tsx', 'jsx'],
-    });
-  }
-  return highlighterPromise;
-}
+import { getHighlighter } from '@/lib/highlighter';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const CodeBlock = ({ inline, className, children, ...props }: any) => {

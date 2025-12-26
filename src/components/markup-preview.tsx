@@ -3,6 +3,7 @@ import { MarkupState } from "@/lib/url-state"
 import { LatexRenderer } from "./renderers/LatexRenderer"
 import { MermaidRenderer } from "./renderers/MermaidRenderer"
 import { MarkdownRenderer } from "./renderers/MarkdownRenderer"
+import { CodeRenderer } from "./renderers/CodeRenderer"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Download, Copy, FileCode } from "lucide-react"
@@ -92,6 +93,7 @@ export function MarkupPreview({ state }: MarkupPreviewProps) {
             >
                 {state.language === 'latex' && <LatexRenderer content={state.content} />}
                 {state.language === 'mermaid' && <MermaidRenderer content={state.content} />}
+                {state.language === 'code' && <CodeRenderer content={state.content} theme={state.theme} />}
                 {state.language === 'markdown' && <MarkdownRenderer content={state.content} theme={state.theme} />}
             </div>
         </div>

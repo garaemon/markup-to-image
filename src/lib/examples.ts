@@ -69,5 +69,28 @@ console.log('Hello');
 | Alice| 24  | Dev  |
 | Bob  | 30  | Lead |`
     }
+  ],
+  code: [
+    {
+      name: "React Component",
+      content: `function Button({ children }) {
+  return (
+    <button className="px-4 py-2 bg-blue-500 text-white rounded">
+      {children}
+    </button>
+  );
+}`
+    },
+    {
+      name: "API Route",
+      content: `export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url)
+  const id = searchParams.get('id')
+  const res = await fetch(\`https://api.example.com/data/\${id}\`)
+  const data = await res.json()
+ 
+  return Response.json({ data })
+}`
+    }
   ]
 };

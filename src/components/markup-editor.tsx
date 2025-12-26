@@ -26,6 +26,7 @@ export function MarkupEditor({ state, onChange }: MarkupEditorProps) {
           <TabsList className="w-full">
             <TabsTrigger value="latex" className="flex-1">LaTeX</TabsTrigger>
             <TabsTrigger value="mermaid" className="flex-1">Mermaid</TabsTrigger>
+            <TabsTrigger value="code" className="flex-1">Code</TabsTrigger>
             <TabsTrigger value="markdown" className="flex-1">Markdown</TabsTrigger>
           </TabsList>
         </Tabs>
