@@ -145,6 +145,17 @@ export function MarkupEditor({ state, onChange }: MarkupEditorProps) {
           />
         </div>
 
+        {(state.language === 'code' || state.language === 'markdown') && (
+          <div className="flex items-center justify-between">
+            <Label htmlFor="line-numbers">Show Line Numbers</Label>
+            <Switch
+              id="line-numbers"
+              checked={state.showLineNumbers}
+              onCheckedChange={(v) => onChange({ showLineNumbers: v })}
+            />
+          </div>
+        )}
+
         <div className="space-y-3">
           <Label>Theme</Label>
           <Select 

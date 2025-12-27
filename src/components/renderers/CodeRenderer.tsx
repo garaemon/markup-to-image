@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { getHighlighter } from '@/lib/highlighter';
+import { cn } from '@/lib/utils';
 
-export function CodeRenderer({ content, language, theme }: { content: string, language: string, theme: string }) {
+export function CodeRenderer({ content, language, theme, showLineNumbers }: { content: string, language: string, theme: string, showLineNumbers?: boolean }) {
   const [html, setHtml] = useState<string | null>(null);
 
   useEffect(() => {
@@ -31,5 +32,11 @@ export function CodeRenderer({ content, language, theme }: { content: string, la
     return <pre className="font-mono text-sm p-4"><code>{content}</code></pre>;
   }
 
-  return <div dangerouslySetInnerHTML={{ __html: html }} className="[&>pre]:!bg-transparent [&>pre]:!p-0 [&>pre]:text-lg [&>pre]:leading-relaxed [&>pre]:whitespace-pre-wrap [&>pre]:break-words [&>pre]:font-mono" />;
+  return <div 
+    dangerouslySetInnerHTML={{ __html: html }} 
+    className={cn(
+      "[&>pre]:!bg-transparent [&>pre]:!p-0 [&>pre]:text-lg [&>pre]:leading-relaxed [&>pre]:whitespace-pre-wrap [&>pre]:break-words [&>pre]:font-mono",
+      showLineNumbers && "show-line-numbers"
+    )} 
+  />;
 }

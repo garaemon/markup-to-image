@@ -175,8 +175,8 @@ export function MarkupPreview({ state }: MarkupPreviewProps) {
                 <div style={{ padding: `${state.padding}px` }}>
                     {state.language === 'latex' && <LatexRenderer content={state.content} />}
                     {state.language === 'mermaid' && <MermaidRenderer content={state.content} />}
-                    {state.language === 'code' && <CodeRenderer content={state.content} language={state.codeLanguage} theme={state.theme} />}
-                    {state.language === 'markdown' && <MarkdownRenderer content={state.content} theme={state.theme} />}
+                    {state.language === 'code' && <CodeRenderer content={state.content} language={state.codeLanguage} theme={state.theme} showLineNumbers={state.showLineNumbers} />}
+                    {state.language === 'markdown' && <MarkdownRenderer content={state.content} theme={state.theme} showLineNumbers={state.showLineNumbers} />}
                 </div>
             </div>
         </div>

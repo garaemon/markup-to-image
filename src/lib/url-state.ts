@@ -13,6 +13,7 @@ export interface MarkupState {
   transparent: boolean;
   theme: Theme;
   window: boolean;
+  showLineNumbers: boolean;
 }
 
 export const defaultState: MarkupState = {
@@ -24,6 +25,7 @@ export const defaultState: MarkupState = {
   transparent: false,
   theme: 'light',
   window: false,
+  showLineNumbers: false,
 };
 
 export function encodeState(state: MarkupState): string {
@@ -36,6 +38,7 @@ export function encodeState(state: MarkupState): string {
   params.set('t', state.transparent ? '1' : '0');
   params.set('h', state.theme);
   params.set('w', state.window ? '1' : '0');
+  params.set('sn', state.showLineNumbers ? '1' : '0');
   return params.toString();
 }
 
@@ -48,6 +51,7 @@ export function decodeState(searchParams: URLSearchParams): MarkupState {
   const t = searchParams.get('t');
   const h = searchParams.get('h') as Theme;
   const w = searchParams.get('w');
+  const sn = searchParams.get('sn');
 
   // Map legacy 'light'/'dark' to github themes if desired, or keep them as aliases
   // For now, let's treat 'light' as 'github-light' and 'dark' as 'github-dark' eventually,
@@ -65,5 +69,6 @@ export function decodeState(searchParams: URLSearchParams): MarkupState {
     transparent: t === '1',
     theme: validTheme ? h : defaultState.theme,
     window: w === '1',
+    showLineNumbers: sn === '1',
   };
 }

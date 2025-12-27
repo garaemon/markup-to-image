@@ -128,11 +128,11 @@
 @layer components {
   /* ... previous mockup-window styles ... */
 
-  .shiki {
+  .show-line-numbers pre {
     counter-reset: line;
   }
   
-  .shiki .line::before {
+  .show-line-numbers pre .line::before {
     content: counter(line);
     counter-increment: line;
     width: 1.5rem;
