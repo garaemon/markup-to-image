@@ -6,9 +6,10 @@ import { MarkdownRenderer } from "./renderers/MarkdownRenderer"
 import { CodeRenderer } from "./renderers/CodeRenderer"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import { Download, Copy, FileCode } from "lucide-react"
+import { Download, Copy, FileCode, FileText } from "lucide-react"
 import { toPng, toSvg, toBlob } from 'html-to-image';
 import { toast } from "sonner"
+import { useReactToPrint } from "react-to-print"
 
 interface MarkupPreviewProps {
   state: MarkupState
@@ -72,6 +73,13 @@ export function MarkupPreview({ state }: MarkupPreviewProps) {
     }
   }
 
+  const handleDownloadPdf = useReactToPrint({
+    contentRef: previewRef,
+    documentTitle: `markup-${Date.now()}`,
+    onAfterPrint: () => toast.success("Printed PDF"),
+    onPrintError: () => toast.error("Failed to print PDF"),
+  })
+
   return (
     <div className="flex flex-col h-full gap-4">
         <div className="flex justify-end gap-2">
@@ -83,6 +91,9 @@ export function MarkupPreview({ state }: MarkupPreviewProps) {
             </Button>
             <Button size="sm" variant="outline" onClick={handleDownloadSvg}>
                 <FileCode className="w-4 h-4 mr-2" /> SVG
+            </Button>
+            <Button size="sm" variant="outline" onClick={() => handleDownloadPdf()}>
+                <FileText className="w-4 h-4 mr-2" /> PDF
             </Button>
         </div>
         
