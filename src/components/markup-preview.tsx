@@ -105,6 +105,7 @@ export function MarkupPreview({ state }: MarkupPreviewProps) {
                 ref={previewRef}
                 style={{
                     borderRadius: `${state.borderRadius}px`,
+                    width: state.width === 'auto' ? 'auto' : `${state.width}px`,
                 }}
                 className={cn(
                     "min-w-[300px] shadow-xl transition-all duration-300 fit-content",

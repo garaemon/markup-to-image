@@ -9,6 +9,7 @@ export interface MarkupState {
   content: string;
   padding: number;
   borderRadius: number;
+  width: number | 'auto';
   transparent: boolean;
   theme: Theme;
   window: boolean;
@@ -20,6 +21,7 @@ export const defaultState: MarkupState = {
   content: 'c = \\sqrt{a^2 + b^2}',
   padding: 32,
   borderRadius: 16,
+  width: 'auto',
   transparent: false,
   theme: 'light',
   window: false,
@@ -32,6 +34,7 @@ export function encodeState(state: MarkupState): string {
   params.set('c', LZString.compressToEncodedURIComponent(state.content));
   params.set('p', state.padding.toString());
   params.set('r', state.borderRadius.toString());
+  params.set('wd', state.width.toString());
   params.set('t', state.transparent ? '1' : '0');
   params.set('h', state.theme);
   params.set('w', state.window ? '1' : '0');
@@ -44,6 +47,7 @@ export function decodeState(searchParams: URLSearchParams): MarkupState {
   const c = searchParams.get('c');
   const p = searchParams.get('p');
   const r = searchParams.get('r');
+  const wd = searchParams.get('wd');
   const t = searchParams.get('t');
   const h = searchParams.get('h') as Theme;
   const w = searchParams.get('w');
@@ -54,6 +58,7 @@ export function decodeState(searchParams: URLSearchParams): MarkupState {
     content: c ? LZString.decompressFromEncodedURIComponent(c) || defaultState.content : defaultState.content,
     padding: p ? parseInt(p, 10) : defaultState.padding,
     borderRadius: r ? parseInt(r, 10) : defaultState.borderRadius,
+    width: wd && wd !== 'auto' ? parseInt(wd, 10) : 'auto',
     transparent: t === '1',
     theme: ['light', 'dark'].includes(h) ? h : defaultState.theme,
     window: w === '1',
