@@ -75,6 +75,54 @@ export function Usage() {
           </table>
         </div>
       </section>
+
+      <section>
+        <h2 className="text-2xl font-bold mb-4">CLI Usage</h2>
+        <p className="mb-4 text-muted-foreground">
+          You can generate shareable URLs programmatically using Node.js and the <code>lz-string</code> library.
+        </p>
+        <div className="grid gap-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Generate Link from Terminal</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="mb-4 text-sm text-muted-foreground">
+                Run this command to compress a file and generate a shareable link:
+              </p>
+              <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-xs font-mono">
+{`# Compress a file and output the URL
+node -e "
+  const lz = require('lz-string');
+  const fs = require('fs');
+  const content = fs.readFileSync('example.ts', 'utf8');
+  const compressed = lz.compressToEncodedURIComponent(content);
+  console.log('https://markup-preview.vercel.app/?l=code&cl=typescript&c=' + compressed);
+"`}
+              </pre>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Using with Pipe</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="mb-4 text-sm text-muted-foreground">
+                You can also pipe content directly to generate a link:
+              </p>
+              <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-xs font-mono">
+{`echo "const hello = 'world';" | node -e "
+  const lz = require('lz-string');
+  process.stdin.on('data', data => {
+    const compressed = lz.compressToEncodedURIComponent(data.toString());
+    console.log('https://markup-preview.vercel.app/?l=code&cl=typescript&c=' + compressed);
+  });
+"`}
+              </pre>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
     </div>
   );
 }
