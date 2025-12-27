@@ -142,6 +142,8 @@ export function MarkupEditor({ state, onChange }: MarkupEditorProps) {
               <SelectItem value="monokai">Monokai</SelectItem>
               <SelectItem value="nord">Nord</SelectItem>
               <SelectItem value="material-theme-ocean">Material Ocean</SelectItem>
+              <SelectItem value="solarized-light">Solarized Light</SelectItem>
+              <SelectItem value="solarized-dark">Solarized Dark</SelectItem>
             </SelectContent>
           </Select>
         </div>

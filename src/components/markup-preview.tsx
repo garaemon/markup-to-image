@@ -102,7 +102,7 @@ export function MarkupPreview({ state }: MarkupPreviewProps) {
   })
 
   // Determine if theme is dark for UI elements logic (like window controls)
-  const isDarkTheme = ['dark', 'github-dark', 'dracula', 'monokai', 'nord', 'material-theme-ocean'].includes(state.theme);
+  const isDarkTheme = ['dark', 'github-dark', 'dracula', 'monokai', 'nord', 'material-theme-ocean', 'solarized-dark'].includes(state.theme);
 
   return (
     <div className="flex flex-col h-full gap-4">

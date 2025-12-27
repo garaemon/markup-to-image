@@ -2,7 +2,7 @@ import LZString from 'lz-string';
 import { SUPPORTED_THEMES } from './highlighter';
 
 export type Language = 'latex' | 'mermaid' | 'markdown' | 'code';
-export type Theme = 'light' | 'dark' | 'monokai' | 'nord' | 'material-theme-ocean' | 'dracula' | 'github-light' | 'github-dark';
+export type Theme = 'light' | 'dark' | 'monokai' | 'nord' | 'material-theme-ocean' | 'dracula' | 'github-light' | 'github-dark' | 'solarized-light' | 'solarized-dark';
 
 export interface MarkupState {
   language: Language;
