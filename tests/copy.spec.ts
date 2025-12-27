@@ -18,4 +18,9 @@ test.describe('Copy PNG functionality', () => {
     // The code uses sonner toast: toast.success("Copied to clipboard as PNG")
     await expect(page.getByText('Copied to clipboard as PNG')).toBeVisible();
   });
+
+  test('should have PDF (Vector) button', async ({ page }) => {
+    // Check if PDF (Vector) button exists
+    await expect(page.getByText('PDF (Vector)')).toBeVisible();
+  });
 });

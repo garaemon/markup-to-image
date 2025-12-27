@@ -11,6 +11,8 @@ import { domToPng, domToSvg, domToBlob } from 'modern-screenshot';
 import { toast } from "sonner"
 import { useReactToPrint } from "react-to-print"
 import { getThemeColors } from "@/lib/highlighter"
+import { jsPDF } from "jspdf"
+import { svg2pdf } from "svg2pdf.js"
 
 interface MarkupPreviewProps {
   state: MarkupState
@@ -118,6 +120,43 @@ export function MarkupPreview({ state, onAutoWidthChange }: MarkupPreviewProps) 
     }
   }
 
+  const handleDownloadPdfVector = async () => {
+    if (!previewRef.current) return
+    try {
+      const dataUrl = await domToSvg(previewRef.current, { 
+        backgroundColor: state.transparent ? undefined : themeColors.bg 
+      })
+      
+      const response = await fetch(dataUrl)
+      const svgString = await response.text()
+      const parser = new DOMParser()
+      const svgDoc = parser.parseFromString(svgString, "image/svg+xml")
+      const svgElement = svgDoc.documentElement as unknown as SVGElement
+
+      const width = previewRef.current.offsetWidth
+      const height = previewRef.current.offsetHeight
+      
+      const doc = new jsPDF({
+        orientation: width > height ? 'landscape' : 'portrait',
+        unit: 'px',
+        format: [width, height]
+      })
+
+      await svg2pdf(svgElement, doc, {
+        x: 0,
+        y: 0,
+        width: width,
+        height: height
+      })
+
+      doc.save(`markup-${Date.now()}.pdf`)
+      toast.success("Downloaded PDF (Vector)")
+    } catch (e) {
+      console.error(e)
+      toast.error("Failed to download PDF")
+    }
+  }
+
   const handleDownloadPdf = useReactToPrint({
     contentRef: previewRef,
     documentTitle: `markup-${Date.now()}`,
@@ -139,6 +178,9 @@ export function MarkupPreview({ state, onAutoWidthChange }: MarkupPreviewProps) 
             </Button>
             <Button size="sm" variant="outline" onClick={handleDownloadSvg}>
                 <FileCode className="w-4 h-4 mr-2" /> SVG
+            </Button>
+            <Button size="sm" variant="outline" onClick={handleDownloadPdfVector}>
+                <FileText className="w-4 h-4 mr-2" /> PDF (Vector)
             </Button>
             <Button size="sm" variant="outline" onClick={() => handleDownloadPdf()}>
                 <FileText className="w-4 h-4 mr-2" /> PDF
