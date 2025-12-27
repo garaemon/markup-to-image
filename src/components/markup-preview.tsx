@@ -97,7 +97,10 @@ export function MarkupPreview({ state }: MarkupPreviewProps) {
             </Button>
         </div>
         
-        <div className="flex-1 flex items-center justify-center overflow-auto bg-secondary/50 rounded-lg p-8">
+        <div className={cn(
+            "flex-1 flex items-center justify-center overflow-auto rounded-lg p-8",
+            state.theme === 'dark' ? "bg-neutral-900" : "bg-secondary/50"
+        )}>
             <div 
                 ref={previewRef}
                 style={{
