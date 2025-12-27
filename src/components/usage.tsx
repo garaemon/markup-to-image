@@ -76,44 +76,6 @@ export function Usage() {
         </div>
       </section>
 
-      <section>
-        <h2 className="text-2xl font-bold mb-4">CLI Usage</h2>
-        <p className="mb-4 text-muted-foreground">
-          You can generate shareable URLs from your terminal. This script compresses your code and constructs a link with the correct parameters.
-        </p>
-        <div className="grid gap-4">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Generate Link for C++ Code</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="mb-4 text-sm text-muted-foreground">
-                Save this as a script (e.g., <code>share.sh</code>) to quickly generate links for your snippets:
-              </p>
-              <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-xs font-mono">
-{`#!/bin/bash
-
-# Your C++ code
-CODE="#include <iostream>
-
-int main() {
-    std::cout << \\"Hello, World!\\" << std::endl;
-    return 0;
-}"
-
-# Compress using Node.js and lz-string
-COMPRESSED=$(node -e "
-  const lz = require('lz-string');
-  console.log(lz.compressToEncodedURIComponent(process.argv[1]));
-" "$CODE")
-
-echo "https://markup-preview.vercel.app/?l=code&cl=cpp&c=$COMPRESSED"
-`}
-              </pre>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
     </div>
   );
 }
