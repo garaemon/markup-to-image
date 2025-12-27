@@ -75,7 +75,7 @@ export function MarkupPreview({ state }: MarkupPreviewProps) {
   return (
     <div className="flex flex-col h-full gap-4">
         <div className="flex justify-end gap-2">
-            <Button size="sm" variant="secondary" onClick={handleCopyPng}>
+            <Button size="sm" variant="default" onClick={handleCopyPng}>
                 <Copy className="w-4 h-4 mr-2" /> Copy PNG
             </Button>
             <Button size="sm" variant="outline" onClick={handleDownloadPng}>
