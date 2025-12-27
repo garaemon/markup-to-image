@@ -126,22 +126,29 @@
 }
 
 @layer components {
-  .mockup-window {
-    position: relative;
-    padding-top: 1.25rem;
-    overflow: hidden;
+  /* ... previous mockup-window styles ... */
+
+  .shiki {
+    counter-reset: line;
   }
   
-  .mockup-window::before {
-    content: "";
+  .shiki .line::before {
+    content: counter(line);
+    counter-increment: line;
+    width: 1.5rem;
+    margin-right: 1rem;
+    display: inline-block;
+    text-align: right;
+    color: currentColor;
+    opacity: 0.3;
+  }
+  
+  .shiki code {
+    display: grid;
+  }
+  
+  .shiki .line {
     display: block;
-    position: absolute;
-    top: 0.75rem;
-    left: 1rem;
-    width: 0.75rem;
-    height: 0.75rem;
-    border-radius: 9999px;
-    opacity: 1;
-    box-shadow: 1.4em 0 #ff5f56, 2.8em 0 #ffbd2e, 4.2em 0 #27c93f;
+    min-height: 1.5rem;
   }
 }

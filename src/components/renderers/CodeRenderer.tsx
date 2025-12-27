@@ -31,5 +31,5 @@ export function CodeRenderer({ content, language, theme }: { content: string, la
     return <pre className="font-mono text-sm p-4"><code>{content}</code></pre>;
   }
 
-  return <div dangerouslySetInnerHTML={{ __html: html }} className="[&>pre]:!bg-transparent [&>pre]:!p-0" />;
+  return <div dangerouslySetInnerHTML={{ __html: html }} className="[&>pre]:!bg-transparent [&>pre]:!p-0 [&>pre]:text-lg [&>pre]:leading-relaxed [&>pre]:whitespace-pre-wrap [&>pre]:break-words [&>pre]:font-mono" />;
 }
