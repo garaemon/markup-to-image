@@ -1,7 +1,6 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 @import "tw-animate-css";
-@plugin "daisyui";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -124,8 +123,25 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+@layer components {
+  .mockup-window {
+    position: relative;
+    padding-top: 1.25rem;
+    overflow: hidden;
+  }
   
   .mockup-window::before {
-    box-shadow: 1.4em 0 #ff5f56, 2.8em 0 #ffbd2e, 4.2em 0 #27c93f !important;
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0.75rem;
+    left: 1rem;
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 9999px;
+    opacity: 1;
+    box-shadow: 1.4em 0 #ff5f56, 2.8em 0 #ffbd2e, 4.2em 0 #27c93f;
   }
 }
