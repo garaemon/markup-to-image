@@ -7,7 +7,7 @@ import { CodeRenderer } from "./renderers/CodeRenderer"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Download, Copy, FileCode, FileText } from "lucide-react"
-import { toPng, toSvg, toBlob } from 'html-to-image';
+import { domToPng, domToSvg, domToBlob } from 'modern-screenshot';
 import { toast } from "sonner"
 import { useReactToPrint } from "react-to-print"
 import { getThemeColors } from "@/lib/highlighter"
@@ -44,7 +44,10 @@ export function MarkupPreview({ state }: MarkupPreviewProps) {
   const handleCopyPng = async () => {
     if (!previewRef.current) return
     try {
-      const blob = await toBlob(previewRef.current, { pixelRatio: 2, backgroundColor: state.transparent ? undefined : themeColors.bg })
+      const blob = await domToBlob(previewRef.current, { 
+        scale: 2, 
+        backgroundColor: state.transparent ? undefined : themeColors.bg 
+      })
       
       if (!blob) {
         throw new Error("Failed to generate image blob")
@@ -67,7 +70,10 @@ export function MarkupPreview({ state }: MarkupPreviewProps) {
   const handleDownloadPng = async () => {
     if (!previewRef.current) return
     try {
-      const dataUrl = await toPng(previewRef.current, { pixelRatio: 2, backgroundColor: state.transparent ? undefined : themeColors.bg })
+      const dataUrl = await domToPng(previewRef.current, { 
+        scale: 2, 
+        backgroundColor: state.transparent ? undefined : themeColors.bg 
+      })
       const link = document.createElement('a')
       link.download = `markup-${Date.now()}.png`
       link.href = dataUrl
@@ -82,7 +88,9 @@ export function MarkupPreview({ state }: MarkupPreviewProps) {
   const handleDownloadSvg = async () => {
     if (!previewRef.current) return
     try {
-      const dataUrl = await toSvg(previewRef.current, { backgroundColor: state.transparent ? undefined : themeColors.bg })
+      const dataUrl = await domToSvg(previewRef.current, { 
+        backgroundColor: state.transparent ? undefined : themeColors.bg 
+      })
       const link = document.createElement('a')
       link.download = `markup-${Date.now()}.svg`
       link.href = dataUrl
@@ -167,7 +175,7 @@ export function MarkupPreview({ state }: MarkupPreviewProps) {
                     '--tw-prose-invert-td-borders': themeColors.fg,
                 } as React.CSSProperties}
                 className={cn(
-                    "min-w-[300px] shadow-xl transition-all duration-300 fit-content",
+                    "min-w-[300px] shadow-xl w-fit fit-content",
                     state.window ? "mockup-window border border-neutral-200 dark:border-neutral-800" : "",
                     isDarkTheme ? "dark" : ""
                 )}
