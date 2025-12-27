@@ -14,11 +14,27 @@ import { getThemeColors } from "@/lib/highlighter"
 
 interface MarkupPreviewProps {
   state: MarkupState
+  onAutoWidthChange?: (width: number) => void
 }
 
-export function MarkupPreview({ state }: MarkupPreviewProps) {
+export function MarkupPreview({ state, onAutoWidthChange }: MarkupPreviewProps) {
   const previewRef = useRef<HTMLDivElement>(null)
   const [themeColors, setThemeColors] = useState<{ bg: string, fg: string }>({ bg: '#ffffff', fg: '#000000' })
+
+  useEffect(() => {
+    if (!previewRef.current || state.width !== 'auto' || !onAutoWidthChange) return;
+
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.target === previewRef.current) {
+          onAutoWidthChange(entry.contentRect.width);
+        }
+      }
+    });
+
+    observer.observe(previewRef.current);
+    return () => observer.disconnect();
+  }, [state.width, onAutoWidthChange]);
 
   useEffect(() => {
     let isMounted = true;
@@ -45,7 +61,7 @@ export function MarkupPreview({ state }: MarkupPreviewProps) {
     if (!previewRef.current) return
     try {
       const blob = await domToBlob(previewRef.current, { 
-        scale: 2, 
+        scale: state.scale, 
         backgroundColor: state.transparent ? undefined : themeColors.bg 
       })
       
@@ -71,7 +87,7 @@ export function MarkupPreview({ state }: MarkupPreviewProps) {
     if (!previewRef.current) return
     try {
       const dataUrl = await domToPng(previewRef.current, { 
-        scale: 2, 
+        scale: state.scale, 
         backgroundColor: state.transparent ? undefined : themeColors.bg 
       })
       const link = document.createElement('a')
@@ -130,13 +146,14 @@ export function MarkupPreview({ state }: MarkupPreviewProps) {
         </div>
         
         <div className={cn(
-            "flex-1 flex items-center justify-center overflow-auto rounded-lg p-8",
+            "flex-1 flex overflow-auto rounded-lg p-8",
             isDarkTheme ? "bg-neutral-900" : "bg-secondary/50"
         )}>
             <div 
                 ref={previewRef}
                 style={{
                     borderRadius: `${state.borderRadius}px`,
+                    width: state.width === 'auto' ? 'auto' : `${state.width}px`,
                     backgroundColor: state.transparent ? 'transparent' : themeColors.bg,
                     color: themeColors.fg,
                     // Override prose colors to match theme
@@ -175,7 +192,7 @@ export function MarkupPreview({ state }: MarkupPreviewProps) {
                     '--tw-prose-invert-td-borders': themeColors.fg,
                 } as React.CSSProperties}
                 className={cn(
-                    "min-w-[300px] shadow-xl w-fit fit-content",
+                    "min-w-[300px] shadow-xl transition-all duration-300 w-fit m-auto flex-shrink-0 fit-content",
                     state.window ? "mockup-window border border-neutral-200 dark:border-neutral-800" : "",
                     isDarkTheme ? "dark" : ""
                 )}
