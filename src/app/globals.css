@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 @import "tw-animate-css";
+@plugin "daisyui";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -122,5 +123,9 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+  
+  .mockup-window::before {
+    box-shadow: 1.4em 0 #ff5f56, 2.8em 0 #ffbd2e, 4.2em 0 #27c93f !important;
   }
 }

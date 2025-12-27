@@ -60,9 +60,9 @@ test.describe('Markup to Image App', () => {
 
   test('should update padding settings', async ({ page }) => {
     // Initial check - get the style or computed style of the container
-    // The preview container has a style attribute for padding
-    const previewContainer = page.locator('div.fit-content');
-    await expect(previewContainer).toHaveCSS('padding', '32px');
+    // The padding is applied to the inner div
+    const contentContainer = page.locator('div.fit-content > div');
+    await expect(contentContainer).toHaveCSS('padding', '32px');
 
     // Change padding using slider (simulating by clicking or simple logic if accessible)
     // Shadcn slider might be tricky to interact with standard inputs, 
@@ -77,7 +77,7 @@ test.describe('Markup to Image App', () => {
     await page.waitForTimeout(100);
     
     // Check if padding changed (32 -> 36 because step is 4)
-    await expect(previewContainer).toHaveCSS('padding', '36px');
+    await expect(contentContainer).toHaveCSS('padding', '36px');
   });
 
   test('should persist state in URL', async ({ page }) => {

@@ -101,19 +101,21 @@ export function MarkupPreview({ state }: MarkupPreviewProps) {
             <div 
                 ref={previewRef}
                 style={{
-                    padding: `${state.padding}px`,
                     borderRadius: `${state.borderRadius}px`,
                 }}
                 className={cn(
                     "min-w-[300px] shadow-xl transition-all duration-300 fit-content",
+                    state.window ? "mockup-window border border-neutral-200 dark:border-neutral-800" : "",
                     state.transparent ? "bg-transparent" : (state.theme === 'dark' ? "bg-black" : "bg-white"),
-                    state.theme === 'dark' ? 'text-white' : 'text-black'
+                    state.theme === 'dark' ? 'text-white dark' : 'text-black'
                 )}
             >
-                {state.language === 'latex' && <LatexRenderer content={state.content} />}
-                {state.language === 'mermaid' && <MermaidRenderer content={state.content} />}
-                {state.language === 'code' && <CodeRenderer content={state.content} language={state.codeLanguage} theme={state.theme} />}
-                {state.language === 'markdown' && <MarkdownRenderer content={state.content} theme={state.theme} />}
+                <div style={{ padding: `${state.padding}px` }}>
+                    {state.language === 'latex' && <LatexRenderer content={state.content} />}
+                    {state.language === 'mermaid' && <MermaidRenderer content={state.content} />}
+                    {state.language === 'code' && <CodeRenderer content={state.content} language={state.codeLanguage} theme={state.theme} />}
+                    {state.language === 'markdown' && <MarkdownRenderer content={state.content} theme={state.theme} />}
+                </div>
             </div>
         </div>
     </div>
