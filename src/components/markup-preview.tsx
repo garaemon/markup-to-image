@@ -131,10 +131,45 @@ export function MarkupPreview({ state }: MarkupPreviewProps) {
                     borderRadius: `${state.borderRadius}px`,
                     backgroundColor: state.transparent ? 'transparent' : themeColors.bg,
                     color: themeColors.fg,
-                }}
+                    // Override prose colors to match theme
+                    '--tw-prose-body': themeColors.fg,
+                    '--tw-prose-headings': themeColors.fg,
+                    '--tw-prose-lead': themeColors.fg,
+                    '--tw-prose-links': themeColors.fg,
+                    '--tw-prose-bold': themeColors.fg,
+                    '--tw-prose-counters': themeColors.fg,
+                    '--tw-prose-bullets': themeColors.fg,
+                    '--tw-prose-hr': themeColors.fg,
+                    '--tw-prose-quotes': themeColors.fg,
+                    '--tw-prose-quote-borders': themeColors.fg,
+                    '--tw-prose-captions': themeColors.fg,
+                    '--tw-prose-code': themeColors.fg,
+                    '--tw-prose-pre-code': themeColors.fg,
+                    '--tw-prose-pre-bg': themeColors.bg,
+                    '--tw-prose-th-borders': themeColors.fg,
+                    '--tw-prose-td-borders': themeColors.fg,
+                    // Override prose-invert colors to match theme
+                    '--tw-prose-invert-body': themeColors.fg,
+                    '--tw-prose-invert-headings': themeColors.fg,
+                    '--tw-prose-invert-lead': themeColors.fg,
+                    '--tw-prose-invert-links': themeColors.fg,
+                    '--tw-prose-invert-bold': themeColors.fg,
+                    '--tw-prose-invert-counters': themeColors.fg,
+                    '--tw-prose-invert-bullets': themeColors.fg,
+                    '--tw-prose-invert-hr': themeColors.fg,
+                    '--tw-prose-invert-quotes': themeColors.fg,
+                    '--tw-prose-invert-quote-borders': themeColors.fg,
+                    '--tw-prose-invert-captions': themeColors.fg,
+                    '--tw-prose-invert-code': themeColors.fg,
+                    '--tw-prose-invert-pre-code': themeColors.fg,
+                    '--tw-prose-invert-pre-bg': themeColors.bg,
+                    '--tw-prose-invert-th-borders': themeColors.fg,
+                    '--tw-prose-invert-td-borders': themeColors.fg,
+                } as React.CSSProperties}
                 className={cn(
                     "min-w-[300px] shadow-xl transition-all duration-300 fit-content",
                     state.window ? "mockup-window border border-neutral-200 dark:border-neutral-800" : "",
+                    isDarkTheme ? "dark" : ""
                 )}
             >
                 <div style={{ padding: `${state.padding}px` }}>

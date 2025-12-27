@@ -44,7 +44,7 @@ test.describe('Code Tab', () => {
     await expect(preview.locator('span').first()).toBeVisible();
     
     // Check persistence
-    await page.waitForTimeout(600); // Wait for debounce
+    await page.waitForTimeout(1000); // Wait for debounce
     const url = page.url();
     expect(url).toContain('cl=python');
     
