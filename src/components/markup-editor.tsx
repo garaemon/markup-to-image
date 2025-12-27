@@ -126,7 +126,7 @@ export function MarkupEditor({ state, onChange }: MarkupEditorProps) {
                 value={[state.width]}
                 onValueChange={([v]) => onChange({ width: v })}
                 min={300}
-                max={2000}
+                max={4000}
                 step={10}
                 className="flex-1"
               />

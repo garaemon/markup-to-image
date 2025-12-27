@@ -98,7 +98,7 @@ export function MarkupPreview({ state }: MarkupPreviewProps) {
         </div>
         
         <div className={cn(
-            "flex-1 flex items-center justify-center overflow-auto rounded-lg p-8",
+            "flex-1 flex overflow-auto rounded-lg p-8",
             state.theme === 'dark' ? "bg-neutral-900" : "bg-secondary/50"
         )}>
             <div 
@@ -108,7 +108,7 @@ export function MarkupPreview({ state }: MarkupPreviewProps) {
                     width: state.width === 'auto' ? 'auto' : `${state.width}px`,
                 }}
                 className={cn(
-                    "min-w-[300px] shadow-xl transition-all duration-300 fit-content",
+                    "min-w-[300px] shadow-xl transition-all duration-300 w-fit m-auto flex-shrink-0",
                     state.window ? "mockup-window border border-neutral-200 dark:border-neutral-800" : "",
                     state.transparent ? "bg-transparent" : (state.theme === 'dark' ? "bg-black" : "bg-white"),
                     state.theme === 'dark' ? 'text-white dark' : 'text-black'
