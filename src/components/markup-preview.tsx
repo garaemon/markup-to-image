@@ -24,10 +24,10 @@ export function MarkupPreview({ state }: MarkupPreviewProps) {
     let isMounted = true;
     const loadTheme = async () => {
         // Map legacy themes to shiki themes
-        const themeName = state.theme === 'light' ? 'github-light' :
-                         state.theme === 'dark' ? 'github-dark' :
+        const themeName = state.theme === 'light' ? 'github-light' : 
+                         state.theme === 'dark' ? 'github-dark' : 
                          state.theme;
-
+        
         try {
             const colors = await getThemeColors(themeName);
             if (isMounted) {
@@ -44,9 +44,9 @@ export function MarkupPreview({ state }: MarkupPreviewProps) {
   const handleCopyPng = async () => {
     if (!previewRef.current) return
     try {
-      const blob = await domToBlob(previewRef.current, {
-        scale: 2,
-        backgroundColor: state.transparent ? undefined : themeColors.bg
+      const blob = await domToBlob(previewRef.current, { 
+        scale: 2, 
+        backgroundColor: state.transparent ? undefined : themeColors.bg 
       })
       
       if (!blob) {
@@ -70,9 +70,9 @@ export function MarkupPreview({ state }: MarkupPreviewProps) {
   const handleDownloadPng = async () => {
     if (!previewRef.current) return
     try {
-      const dataUrl = await domToPng(previewRef.current, {
-        scale: 2,
-        backgroundColor: state.transparent ? undefined : themeColors.bg
+      const dataUrl = await domToPng(previewRef.current, { 
+        scale: 2, 
+        backgroundColor: state.transparent ? undefined : themeColors.bg 
       })
       const link = document.createElement('a')
       link.download = `markup-${Date.now()}.png`
@@ -88,8 +88,8 @@ export function MarkupPreview({ state }: MarkupPreviewProps) {
   const handleDownloadSvg = async () => {
     if (!previewRef.current) return
     try {
-      const dataUrl = await domToSvg(previewRef.current, {
-        backgroundColor: state.transparent ? undefined : themeColors.bg
+      const dataUrl = await domToSvg(previewRef.current, { 
+        backgroundColor: state.transparent ? undefined : themeColors.bg 
       })
       const link = document.createElement('a')
       link.download = `markup-${Date.now()}.svg`

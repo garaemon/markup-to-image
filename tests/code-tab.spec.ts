@@ -34,7 +34,7 @@ test.describe('Code Tab', () => {
     
     // Check preview
     // Shiki adds inline styles for colors, so we can check for spans with style attributes
-    // or simply that the shiki container exists.
+    // or simply that the shiki container exists. 
     // Depending on shiki version/config, class might be 'shiki' or something else.
     // It usually produces <pre class="shiki ...">
     const preview = page.locator('.fit-content pre');
@@ -42,7 +42,7 @@ test.describe('Code Tab', () => {
     
     // Ensure syntax highlighting is applied (it renders spans)
     await expect(preview.locator('span').first()).toBeVisible();
-
+    
     // Check persistence
     await page.waitForTimeout(1000); // Wait for debounce
     const url = page.url();

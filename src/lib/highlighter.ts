@@ -8,7 +8,7 @@ export const SUPPORTED_LANGUAGES = [
 ];
 
 export const SUPPORTED_THEMES = [
-  'github-light', 'github-dark', 'dracula',
+  'github-light', 'github-dark', 'dracula', 
   'monokai', 'nord', 'material-theme-ocean',
   'solarized-light', 'solarized-dark'
 ];

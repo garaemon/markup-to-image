@@ -7,8 +7,8 @@ export function CodeRenderer({ content, language, theme, showLineNumbers }: { co
 
   useEffect(() => {
     let isMounted = true;
-    const targetTheme = theme === 'light' ? 'github-light' :
-                        theme === 'dark' ? 'github-dark' :
+    const targetTheme = theme === 'light' ? 'github-light' : 
+                        theme === 'dark' ? 'github-dark' : 
                         theme;
 
     getHighlighter().then(highlighter => {
@@ -22,7 +22,7 @@ export function CodeRenderer({ content, language, theme, showLineNumbers }: { co
        } catch (e) {
          console.error(e);
          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-         setHtml(`<pre class="text-red-500">Error: ${(e as any).message}</pre>`);
+         setHtml(`<pre class="text-red-500">Error: ${(e as any).message}</pre>`); 
        }
     });
     return () => { isMounted = false; };
@@ -32,11 +32,11 @@ export function CodeRenderer({ content, language, theme, showLineNumbers }: { co
     return <pre className="font-mono text-sm p-4"><code>{content}</code></pre>;
   }
 
-  return <div
-    dangerouslySetInnerHTML={{ __html: html }}
+  return <div 
+    dangerouslySetInnerHTML={{ __html: html }} 
     className={cn(
       "[&>pre]:!bg-transparent [&>pre]:!p-0 [&>pre]:text-lg [&>pre]:leading-relaxed [&>pre]:whitespace-pre-wrap [&>pre]:break-words [&>pre]:font-mono",
       showLineNumbers && "show-line-numbers"
-    )}
+    )} 
   />;
 }

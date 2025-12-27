@@ -61,7 +61,7 @@ export function decodeState(searchParams: URLSearchParams): MarkupState {
   // For now, let's treat 'light' as 'github-light' and 'dark' as 'github-dark' eventually,
   // but to keep compatibility, we allow them in the type.
   // Actually, let's just allow anything in SUPPORTED_THEMES plus 'light'/'dark'
-
+  
   const validTheme = (SUPPORTED_THEMES.includes(h) || h === 'light' || h === 'dark');
 
   return {

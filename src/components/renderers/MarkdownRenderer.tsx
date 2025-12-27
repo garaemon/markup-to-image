@@ -46,12 +46,12 @@ const CodeBlock = ({ inline, className, children, theme, showLineNumbers, ...pro
     return <pre className={cn("!bg-transparent !p-0", className)} {...props}><code>{children}</code></pre>;
   }
 
-  return <div
-    dangerouslySetInnerHTML={{ __html: html }}
+  return <div 
+    dangerouslySetInnerHTML={{ __html: html }} 
     className={cn(
       "[&>pre]:!bg-transparent [&>pre]:!p-0 [&>pre]:text-base [&>pre]:leading-relaxed [&>pre]:whitespace-pre-wrap [&>pre]:break-words my-4",
       showLineNumbers && "show-line-numbers"
-    )}
+    )} 
   />;
 };
 

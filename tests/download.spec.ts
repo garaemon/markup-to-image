@@ -12,13 +12,13 @@ test.describe('Download Reliability', () => {
   for (const mode of modes) {
     test(`should download a valid PNG for ${mode.name}`, async ({ page }) => {
       await page.goto('/');
-
+      
       // Select the mode
       await page.getByRole('tab', { name: mode.tab }).click();
-
+      
       // Wait for the specific content to be rendered
       await expect(page.locator(mode.selector).first()).toBeVisible();
-
+      
       // Start waiting for download before clicking
       const downloadPromise = page.waitForEvent('download');
       await page.getByRole('button', { name: 'PNG', exact: true }).click();
@@ -27,13 +27,13 @@ test.describe('Download Reliability', () => {
       // Verify download
       const path = await download.path();
       expect(path).not.toBeNull();
-
+      
       const stats = fs.statSync(path!);
       // A typical minimal image with content should be at least a few KB.
       // 2000 bytes is a safe lower bound for these examples.
       console.log(`${mode.name} PNG size: ${stats.size} bytes`);
       expect(stats.size).toBeGreaterThan(2000);
-
+      
       expect(download.suggestedFilename()).toMatch(/^markup-\d+\.png$/);
     });
   }

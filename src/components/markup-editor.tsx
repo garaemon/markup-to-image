@@ -29,21 +29,21 @@ export function MarkupEditor({ state, onChange }: MarkupEditorProps) {
           onValueChange={(v) => {
             const lang = v as Language;
             const updates: Partial<MarkupState> = { language: lang };
-
+            
             // If content is one of the default/example contents of the previous language,
             // or if it's the initial default, switch it to the first example of the new language.
             const allExamples = [...EXAMPLES.latex, ...EXAMPLES.mermaid, ...EXAMPLES.markdown, ...Object.values(CODE_EXAMPLES).flat()];
             const isExample = allExamples.some(ex => ex.content === state.content);
-
+            
             if (isExample || state.content === defaultState.content) {
-              const nextExamples = lang === 'code'
+              const nextExamples = lang === 'code' 
                 ? (CODE_EXAMPLES[state.codeLanguage] || [])
                 : EXAMPLES[lang];
               if (nextExamples.length > 0) {
                 updates.content = nextExamples[0].content;
               }
             }
-
+            
             onChange(updates);
           }}
           className="w-full"
