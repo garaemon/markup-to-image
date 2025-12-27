@@ -1,7 +1,8 @@
 import LZString from 'lz-string';
+import { SUPPORTED_THEMES } from './highlighter';
 
 export type Language = 'latex' | 'mermaid' | 'markdown' | 'code';
-export type Theme = 'light' | 'dark';
+export type Theme = 'light' | 'dark' | 'monokai' | 'nord' | 'material-theme-ocean' | 'dracula' | 'github-light' | 'github-dark';
 
 export interface MarkupState {
   language: Language;
@@ -48,6 +49,13 @@ export function decodeState(searchParams: URLSearchParams): MarkupState {
   const h = searchParams.get('h') as Theme;
   const w = searchParams.get('w');
 
+  // Map legacy 'light'/'dark' to github themes if desired, or keep them as aliases
+  // For now, let's treat 'light' as 'github-light' and 'dark' as 'github-dark' eventually,
+  // but to keep compatibility, we allow them in the type.
+  // Actually, let's just allow anything in SUPPORTED_THEMES plus 'light'/'dark'
+  
+  const validTheme = (SUPPORTED_THEMES.includes(h) || h === 'light' || h === 'dark');
+
   return {
     language: ['latex', 'mermaid', 'markdown', 'code'].includes(l) ? l : defaultState.language,
     codeLanguage: cl || defaultState.codeLanguage,
@@ -55,7 +63,7 @@ export function decodeState(searchParams: URLSearchParams): MarkupState {
     padding: p ? parseInt(p, 10) : defaultState.padding,
     borderRadius: r ? parseInt(r, 10) : defaultState.borderRadius,
     transparent: t === '1',
-    theme: ['light', 'dark'].includes(h) ? h : defaultState.theme,
+    theme: validTheme ? h : defaultState.theme,
     window: w === '1',
   };
 }

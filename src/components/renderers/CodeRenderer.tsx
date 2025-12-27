@@ -1,22 +1,27 @@
 import { useEffect, useState } from 'react';
 import { getHighlighter } from '@/lib/highlighter';
 
-export function CodeRenderer({ content, language, theme }: { content: string, language: string, theme: 'light' | 'dark' }) {
+export function CodeRenderer({ content, language, theme }: { content: string, language: string, theme: string }) {
   const [html, setHtml] = useState<string | null>(null);
 
   useEffect(() => {
     let isMounted = true;
+    const targetTheme = theme === 'light' ? 'github-light' : 
+                        theme === 'dark' ? 'github-dark' : 
+                        theme;
+
     getHighlighter().then(highlighter => {
        if (!isMounted) return;
        try {
          const out = highlighter.codeToHtml(content, {
            lang: language,
-           theme: theme === 'dark' ? 'github-dark' : 'github-light'
+           theme: targetTheme
          });
          setHtml(out);
        } catch (e) {
          console.error(e);
-         setHtml(null); 
+         // eslint-disable-next-line @typescript-eslint/no-explicit-any
+         setHtml(`<pre class="text-red-500">Error: ${(e as any).message}</pre>`); 
        }
     });
     return () => { isMounted = false; };

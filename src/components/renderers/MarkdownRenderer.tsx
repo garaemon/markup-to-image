@@ -14,6 +14,10 @@ const CodeBlock = ({ inline, className, children, theme, ...props }: any) => {
     if (inline) return;
 
     let isMounted = true;
+    const targetTheme = theme === 'light' ? 'github-light' : 
+                        theme === 'dark' ? 'github-dark' : 
+                        theme;
+
     getHighlighter().then(highlighter => {
        if (!isMounted) return;
        try {
@@ -22,7 +26,7 @@ const CodeBlock = ({ inline, className, children, theme, ...props }: any) => {
          
          const out = highlighter.codeToHtml(code, {
            lang: targetLang,
-           theme: theme === 'dark' ? 'github-dark' : 'github-light'
+           theme: targetTheme
          });
          setHtml(out);
        } catch (e) {
@@ -44,7 +48,7 @@ const CodeBlock = ({ inline, className, children, theme, ...props }: any) => {
   return <div dangerouslySetInnerHTML={{ __html: html }} />;
 };
 
-export function MarkdownRenderer({ content, theme }: { content: string, theme: 'light' | 'dark' }) {
+export function MarkdownRenderer({ content, theme }: { content: string, theme: string }) {
   const components = useMemo(() => ({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     code: (props: any) => <CodeBlock {...props} theme={theme} />
