@@ -4,6 +4,7 @@ import { Suspense, useState } from 'react';
 import { Header } from "@/components/header";
 import { MarkupEditor } from "@/components/markup-editor";
 import { MarkupPreview } from "@/components/markup-preview";
+import { Usage } from "@/components/usage";
 import { useMarkupState } from "@/hooks/use-markup-state";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
@@ -30,16 +31,21 @@ function MarkupApp() {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-background text-foreground">
-      <Header onShare={handleShare} />
-      <main className="flex-1 flex flex-col md:flex-row overflow-hidden">
-        <div className="w-full md:w-1/2 border-r p-6 overflow-y-auto bg-background">
-           <MarkupEditor state={state} onChange={updateState} autoWidth={autoWidth} />
-        </div>
-        <div className="w-full md:w-1/2 p-6 overflow-hidden bg-muted/30">
-           <MarkupPreview state={state} onAutoWidthChange={setAutoWidth} />
-        </div>
-      </main>
+    <div className="flex flex-col min-h-screen bg-background text-foreground">
+      <div className="flex flex-col h-screen">
+        <Header onShare={handleShare} />
+        <main className="flex-1 flex flex-col md:flex-row overflow-hidden">
+          <div className="w-full md:w-1/2 border-r p-6 overflow-y-auto bg-background">
+             <MarkupEditor state={state} onChange={updateState} autoWidth={autoWidth} />
+          </div>
+          <div className="w-full md:w-1/2 p-6 overflow-hidden bg-muted/30">
+             <MarkupPreview state={state} onAutoWidthChange={setAutoWidth} />
+          </div>
+        </main>
+      </div>
+      <div className="border-t py-12 bg-muted/10">
+        <Usage />
+      </div>
     </div>
   );
 }

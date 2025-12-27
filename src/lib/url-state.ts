@@ -2,7 +2,7 @@ import LZString from 'lz-string';
 import { SUPPORTED_THEMES } from './highlighter';
 
 export type Language = 'latex' | 'mermaid' | 'markdown' | 'code';
-export type Theme = 'light' | 'dark' | 'monokai' | 'nord' | 'material-theme-ocean' | 'dracula' | 'github-light' | 'github-dark' | 'solarized-light' | 'solarized-dark';
+export type Theme = typeof SUPPORTED_THEMES[number] | 'light' | 'dark';
 
 export interface MarkupState {
   language: Language;
@@ -21,7 +21,7 @@ export interface MarkupState {
 export const defaultState: MarkupState = {
   language: 'latex',
   codeLanguage: 'typescript',
-  content: 'c = \\sqrt{a^2 + b^2}',
+  content: 'c = \sqrt{a^2 + b^2}',
   padding: 32,
   borderRadius: 16,
   width: 'auto',
@@ -32,48 +32,117 @@ export const defaultState: MarkupState = {
   showLineNumbers: false,
 };
 
+export interface UrlParameterInfo {
+  key: string;
+  description: string;
+  type: 'string' | 'number' | 'boolean' | 'enum';
+  options?: readonly string[];
+}
+
+export const URL_PARAMETERS: Record<keyof MarkupState, UrlParameterInfo> = {
+  language: {
+    key: 'l',
+    description: 'Markup language',
+    type: 'enum',
+    options: ['latex', 'mermaid', 'markdown', 'code'],
+  },
+  codeLanguage: {
+    key: 'cl',
+    description: 'Programming language for code renderer',
+    type: 'string',
+  },
+  content: {
+    key: 'c',
+    description: 'Source code or markup text (LZ-compressed)',
+    type: 'string',
+  },
+  padding: {
+    key: 'p',
+    description: 'Padding around the content (pixels)',
+    type: 'number',
+  },
+  borderRadius: {
+    key: 'r',
+    description: 'Border radius of the container (pixels)',
+    type: 'number',
+  },
+  width: {
+    key: 'wd',
+    description: 'Width of the image (pixels or "auto")',
+    type: 'number',
+  },
+  scale: {
+    key: 's',
+    description: 'Scale factor for the image',
+    type: 'number',
+  },
+  transparent: {
+    key: 't',
+    description: 'Whether the background is transparent (1 for true, 0 for false)',
+    type: 'boolean',
+  },
+  theme: {
+    key: 'h',
+    description: 'Syntax highlighting theme',
+    type: 'enum',
+    options: [...SUPPORTED_THEMES, 'light', 'dark'],
+  },
+  window: {
+    key: 'w',
+    description: 'Whether to show window controls (1 for true, 0 for false)',
+    type: 'boolean',
+  },
+  showLineNumbers: {
+    key: 'sn',
+    description: 'Whether to show line numbers (1 for true, 0 for false)',
+    type: 'boolean',
+  },
+};
+
 export function encodeState(state: MarkupState): string {
   const params = new URLSearchParams();
-  params.set('l', state.language);
-  params.set('cl', state.codeLanguage);
-  params.set('c', LZString.compressToEncodedURIComponent(state.content));
-  params.set('p', state.padding.toString());
-  params.set('r', state.borderRadius.toString());
-  params.set('wd', state.width.toString());
-  params.set('s', state.scale.toString());
-  params.set('t', state.transparent ? '1' : '0');
-  params.set('h', state.theme);
-  params.set('w', state.window ? '1' : '0');
-  params.set('sn', state.showLineNumbers ? '1' : '0');
+  
+  (Object.entries(URL_PARAMETERS) as [keyof MarkupState, UrlParameterInfo][]).forEach(([name, info]) => {
+    const value = state[name];
+    if (value === undefined) return;
+
+    let encodedValue: string;
+    if (name === 'content') {
+      encodedValue = LZString.compressToEncodedURIComponent(value as string);
+    } else if (info.type === 'boolean') {
+      encodedValue = value ? '1' : '0';
+    } else {
+      encodedValue = value.toString();
+    }
+    params.set(info.key, encodedValue);
+  });
+
   return params.toString();
 }
 
 export function decodeState(searchParams: URLSearchParams): MarkupState {
-  const l = searchParams.get('l') as Language;
-  const cl = searchParams.get('cl');
-  const c = searchParams.get('c');
-  const p = searchParams.get('p');
-  const r = searchParams.get('r');
-  const wd = searchParams.get('wd');
-  const s = searchParams.get('s');
-  const t = searchParams.get('t');
-  const h = searchParams.get('h') as Theme;
-  const w = searchParams.get('w');
-  const sn = searchParams.get('sn');
+  const state = { ...defaultState };
 
-  const validTheme = (SUPPORTED_THEMES.includes(h) || h === 'light' || h === 'dark');
+  (Object.entries(URL_PARAMETERS) as [keyof MarkupState, UrlParameterInfo][]).forEach(([name, info]) => {
+    const rawValue = searchParams.get(info.key);
+    if (rawValue === null) return;
 
-  return {
-    language: ['latex', 'mermaid', 'markdown', 'code'].includes(l) ? l : defaultState.language,
-    codeLanguage: cl || defaultState.codeLanguage,
-    content: c ? LZString.decompressFromEncodedURIComponent(c) || defaultState.content : defaultState.content,
-    padding: p ? parseInt(p, 10) : defaultState.padding,
-    borderRadius: r ? parseInt(r, 10) : defaultState.borderRadius,
-    width: wd && wd !== 'auto' ? parseInt(wd, 10) : 'auto',
-    scale: s ? parseFloat(s) : defaultState.scale,
-    transparent: t === '1',
-    theme: validTheme ? h : defaultState.theme,
-    window: w === '1',
-    showLineNumbers: sn === '1',
-  };
+    if (name === 'content') {
+      state[name] = LZString.decompressFromEncodedURIComponent(rawValue) || defaultState.content;
+    } else if (name === 'width') {
+      state[name] = rawValue === 'auto' ? 'auto' : parseInt(rawValue, 10);
+    } else if (info.type === 'number') {
+      state[name] = (name === 'scale' ? parseFloat(rawValue) : parseInt(rawValue, 10)) as never;
+    } else if (info.type === 'boolean') {
+      state[name] = (rawValue === '1') as never;
+    } else if (info.type === 'enum' && info.options) {
+      if (info.options.includes(rawValue)) {
+        state[name] = rawValue as never;
+      }
+    } else {
+      state[name] = rawValue as never;
+    }
+  });
+
+  return state;
 }
