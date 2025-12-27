@@ -79,45 +79,36 @@ export function Usage() {
       <section>
         <h2 className="text-2xl font-bold mb-4">CLI Usage</h2>
         <p className="mb-4 text-muted-foreground">
-          You can generate shareable URLs programmatically using Node.js and the <code>lz-string</code> library.
+          You can generate shareable URLs from your terminal. This script compresses your code and constructs a link with the correct parameters.
         </p>
         <div className="grid gap-4">
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Generate Link from Terminal</CardTitle>
+              <CardTitle className="text-lg">Generate Link for C++ Code</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="mb-4 text-sm text-muted-foreground">
-                Run this command to compress a file and generate a shareable link:
+                Save this as a script (e.g., <code>share.sh</code>) to quickly generate links for your snippets:
               </p>
               <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-xs font-mono">
-{`# Compress a file and output the URL
-node -e "
+{`#!/bin/bash
+
+# Your C++ code
+CODE="#include <iostream>
+
+int main() {
+    std::cout << \\"Hello, World!\\" << std::endl;
+    return 0;
+}"
+
+# Compress using Node.js and lz-string
+COMPRESSED=$(node -e "
   const lz = require('lz-string');
-  const fs = require('fs');
-  const content = fs.readFileSync('example.ts', 'utf8');
-  const compressed = lz.compressToEncodedURIComponent(content);
-  console.log('https://markup-preview.vercel.app/?l=code&cl=typescript&c=' + compressed);
-"`}
-              </pre>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Using with Pipe</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="mb-4 text-sm text-muted-foreground">
-                You can also pipe content directly to generate a link:
-              </p>
-              <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-xs font-mono">
-{`echo "const hello = 'world';" | node -e "
-  const lz = require('lz-string');
-  process.stdin.on('data', data => {
-    const compressed = lz.compressToEncodedURIComponent(data.toString());
-    console.log('https://markup-preview.vercel.app/?l=code&cl=typescript&c=' + compressed);
-  });
-"`}
+  console.log(lz.compressToEncodedURIComponent(process.argv[1]));
+" "$CODE")
+
+echo "https://markup-preview.vercel.app/?l=code&cl=cpp&c=$COMPRESSED"
+`}
               </pre>
             </CardContent>
           </Card>
