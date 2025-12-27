@@ -14,11 +14,27 @@ import { getThemeColors } from "@/lib/highlighter"
 
 interface MarkupPreviewProps {
   state: MarkupState
+  onAutoWidthChange?: (width: number) => void
 }
 
-export function MarkupPreview({ state }: MarkupPreviewProps) {
+export function MarkupPreview({ state, onAutoWidthChange }: MarkupPreviewProps) {
   const previewRef = useRef<HTMLDivElement>(null)
   const [themeColors, setThemeColors] = useState<{ bg: string, fg: string }>({ bg: '#ffffff', fg: '#000000' })
+
+  useEffect(() => {
+    if (!previewRef.current || state.width !== 'auto' || !onAutoWidthChange) return;
+
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.target === previewRef.current) {
+          onAutoWidthChange(entry.contentRect.width);
+        }
+      }
+    });
+
+    observer.observe(previewRef.current);
+    return () => observer.disconnect();
+  }, [state.width, onAutoWidthChange]);
 
   useEffect(() => {
     let isMounted = true;
@@ -45,7 +61,7 @@ export function MarkupPreview({ state }: MarkupPreviewProps) {
     if (!previewRef.current) return
     try {
       const blob = await domToBlob(previewRef.current, { 
-        scale: 2, 
+        scale: state.scale, 
         backgroundColor: state.transparent ? undefined : themeColors.bg 
       })
       
@@ -71,7 +87,7 @@ export function MarkupPreview({ state }: MarkupPreviewProps) {
     if (!previewRef.current) return
     try {
       const dataUrl = await domToPng(previewRef.current, { 
-        scale: 2, 
+        scale: state.scale, 
         backgroundColor: state.transparent ? undefined : themeColors.bg 
       })
       const link = document.createElement('a')

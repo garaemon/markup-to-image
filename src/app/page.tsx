@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense } from 'react';
+import { Suspense, useState } from 'react';
 import { Header } from "@/components/header";
 import { MarkupEditor } from "@/components/markup-editor";
 import { MarkupPreview } from "@/components/markup-preview";
@@ -10,6 +10,7 @@ import { Loader2 } from "lucide-react";
 
 function MarkupApp() {
   const { state, updateState, isLoaded } = useMarkupState();
+  const [autoWidth, setAutoWidth] = useState<number>(600);
 
   const handleShare = () => {
     if (!navigator.clipboard) {
@@ -33,10 +34,10 @@ function MarkupApp() {
       <Header onShare={handleShare} />
       <main className="flex-1 flex flex-col md:flex-row overflow-hidden">
         <div className="w-full md:w-1/2 border-r p-6 overflow-y-auto bg-background">
-           <MarkupEditor state={state} onChange={updateState} />
+           <MarkupEditor state={state} onChange={updateState} autoWidth={autoWidth} />
         </div>
         <div className="w-full md:w-1/2 p-6 overflow-hidden bg-muted/30">
-           <MarkupPreview state={state} />
+           <MarkupPreview state={state} onAutoWidthChange={setAutoWidth} />
         </div>
       </main>
     </div>

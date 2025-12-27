@@ -11,6 +11,7 @@ export interface MarkupState {
   padding: number;
   borderRadius: number;
   width: number | 'auto';
+  scale: number;
   transparent: boolean;
   theme: Theme;
   window: boolean;
@@ -24,6 +25,7 @@ export const defaultState: MarkupState = {
   padding: 32,
   borderRadius: 16,
   width: 'auto',
+  scale: 2,
   transparent: false,
   theme: 'light',
   window: false,
@@ -38,6 +40,7 @@ export function encodeState(state: MarkupState): string {
   params.set('p', state.padding.toString());
   params.set('r', state.borderRadius.toString());
   params.set('wd', state.width.toString());
+  params.set('s', state.scale.toString());
   params.set('t', state.transparent ? '1' : '0');
   params.set('h', state.theme);
   params.set('w', state.window ? '1' : '0');
@@ -52,16 +55,12 @@ export function decodeState(searchParams: URLSearchParams): MarkupState {
   const p = searchParams.get('p');
   const r = searchParams.get('r');
   const wd = searchParams.get('wd');
+  const s = searchParams.get('s');
   const t = searchParams.get('t');
   const h = searchParams.get('h') as Theme;
   const w = searchParams.get('w');
   const sn = searchParams.get('sn');
 
-  // Map legacy 'light'/'dark' to github themes if desired, or keep them as aliases
-  // For now, let's treat 'light' as 'github-light' and 'dark' as 'github-dark' eventually,
-  // but to keep compatibility, we allow them in the type.
-  // Actually, let's just allow anything in SUPPORTED_THEMES plus 'light'/'dark'
-  
   const validTheme = (SUPPORTED_THEMES.includes(h) || h === 'light' || h === 'dark');
 
   return {
@@ -71,6 +70,7 @@ export function decodeState(searchParams: URLSearchParams): MarkupState {
     padding: p ? parseInt(p, 10) : defaultState.padding,
     borderRadius: r ? parseInt(r, 10) : defaultState.borderRadius,
     width: wd && wd !== 'auto' ? parseInt(wd, 10) : 'auto',
+    scale: s ? parseFloat(s) : defaultState.scale,
     transparent: t === '1',
     theme: validTheme ? h : defaultState.theme,
     window: w === '1',

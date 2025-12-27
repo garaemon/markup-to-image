@@ -13,9 +13,10 @@ import { SUPPORTED_LANGUAGES } from "@/lib/highlighter"
 interface MarkupEditorProps {
   state: MarkupState
   onChange: (updates: Partial<MarkupState>) => void
+  autoWidth?: number
 }
 
-export function MarkupEditor({ state, onChange }: MarkupEditorProps) {
+export function MarkupEditor({ state, onChange, autoWidth }: MarkupEditorProps) {
   const currentExamples = state.language === 'code' 
     ? (CODE_EXAMPLES[state.codeLanguage] || [])
     : EXAMPLES[state.language];
@@ -135,7 +136,7 @@ export function MarkupEditor({ state, onChange }: MarkupEditorProps) {
               <span className="text-xs text-muted-foreground">Auto</span>
               <Switch
                 checked={state.width === 'auto'}
-                onCheckedChange={(v) => onChange({ width: v ? 'auto' : 600 })}
+                onCheckedChange={(v) => onChange({ width: v ? 'auto' : (Math.round(autoWidth || 600)) })}
               />
             </div>
           </div>
@@ -144,7 +145,7 @@ export function MarkupEditor({ state, onChange }: MarkupEditorProps) {
               <Slider
                 value={[state.width]}
                 onValueChange={([v]) => onChange({ width: v })}
-                min={300}
+                min={100}
                 max={4000}
                 step={10}
                 className="flex-1"
@@ -161,6 +162,25 @@ export function MarkupEditor({ state, onChange }: MarkupEditorProps) {
               <span className="text-xs text-muted-foreground">px</span>
             </div>
           )}
+          {state.width !== 'auto' && (
+             <p className="text-[10px] text-muted-foreground italic">
+                Export size: {Math.round(state.width * state.scale)}px wide
+             </p>
+          )}
+        </div>
+
+        <div className="space-y-3">
+          <div className="flex justify-between">
+            <Label>Export Scale</Label>
+            <span className="text-xs text-muted-foreground">{state.scale}x</span>
+          </div>
+          <Slider
+            value={[state.scale]}
+            onValueChange={([v]) => onChange({ scale: v })}
+            min={1}
+            max={5}
+            step={0.5}
+          />
         </div>
 
         <div className="flex items-center justify-between">
