@@ -85,7 +85,7 @@ test.describe('Markup to Image App', () => {
     await editor.fill('State Persistence Test');
     
     // Wait for debounce and URL update
-    await page.waitForTimeout(600);
+    await page.waitForTimeout(1000);
     
     const url = page.url();
     expect(url).toContain('c='); // Content param exists

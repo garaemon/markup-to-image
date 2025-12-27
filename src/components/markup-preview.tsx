@@ -1,4 +1,4 @@
-import { useRef } from "react"
+import { useRef, useEffect, useState } from "react"
 import { MarkupState } from "@/lib/url-state"
 import { LatexRenderer } from "./renderers/LatexRenderer"
 import { MermaidRenderer } from "./renderers/MermaidRenderer"
@@ -10,6 +10,7 @@ import { Download, Copy, FileCode, FileText } from "lucide-react"
 import { toPng, toSvg, toBlob } from 'html-to-image';
 import { toast } from "sonner"
 import { useReactToPrint } from "react-to-print"
+import { getThemeColors } from "@/lib/highlighter"
 
 interface MarkupPreviewProps {
   state: MarkupState
@@ -17,13 +18,33 @@ interface MarkupPreviewProps {
 
 export function MarkupPreview({ state }: MarkupPreviewProps) {
   const previewRef = useRef<HTMLDivElement>(null)
+  const [themeColors, setThemeColors] = useState<{ bg: string, fg: string }>({ bg: '#ffffff', fg: '#000000' })
+
+  useEffect(() => {
+    let isMounted = true;
+    const loadTheme = async () => {
+        // Map legacy themes to shiki themes
+        const themeName = state.theme === 'light' ? 'github-light' : 
+                         state.theme === 'dark' ? 'github-dark' : 
+                         state.theme;
+        
+        try {
+            const colors = await getThemeColors(themeName);
+            if (isMounted) {
+                setThemeColors(colors);
+            }
+        } catch (e) {
+            console.error('Failed to load theme colors', e);
+        }
+    };
+    loadTheme();
+    return () => { isMounted = false; };
+  }, [state.theme]);
 
   const handleCopyPng = async () => {
     if (!previewRef.current) return
     try {
-      // html-to-image sometimes needs a little delay or multiple tries for complex layouts,
-      // but usually works fine.
-      const blob = await toBlob(previewRef.current, { pixelRatio: 2, backgroundColor: state.transparent ? undefined : (state.theme === 'dark' ? '#000' : '#fff') })
+      const blob = await toBlob(previewRef.current, { pixelRatio: 2, backgroundColor: state.transparent ? undefined : themeColors.bg })
       
       if (!blob) {
         throw new Error("Failed to generate image blob")
@@ -46,7 +67,7 @@ export function MarkupPreview({ state }: MarkupPreviewProps) {
   const handleDownloadPng = async () => {
     if (!previewRef.current) return
     try {
-      const dataUrl = await toPng(previewRef.current, { pixelRatio: 2, backgroundColor: state.transparent ? undefined : (state.theme === 'dark' ? '#000' : '#fff') })
+      const dataUrl = await toPng(previewRef.current, { pixelRatio: 2, backgroundColor: state.transparent ? undefined : themeColors.bg })
       const link = document.createElement('a')
       link.download = `markup-${Date.now()}.png`
       link.href = dataUrl
@@ -61,7 +82,7 @@ export function MarkupPreview({ state }: MarkupPreviewProps) {
   const handleDownloadSvg = async () => {
     if (!previewRef.current) return
     try {
-      const dataUrl = await toSvg(previewRef.current, { backgroundColor: state.transparent ? undefined : (state.theme === 'dark' ? '#000' : '#fff') })
+      const dataUrl = await toSvg(previewRef.current, { backgroundColor: state.transparent ? undefined : themeColors.bg })
       const link = document.createElement('a')
       link.download = `markup-${Date.now()}.svg`
       link.href = dataUrl
@@ -79,6 +100,9 @@ export function MarkupPreview({ state }: MarkupPreviewProps) {
     onAfterPrint: () => toast.success("Printed PDF"),
     onPrintError: () => toast.error("Failed to print PDF"),
   })
+
+  // Determine if theme is dark for UI elements logic (like window controls)
+  const isDarkTheme = ['dark', 'github-dark', 'dracula', 'monokai', 'nord', 'material-theme-ocean', 'solarized-dark'].includes(state.theme);
 
   return (
     <div className="flex flex-col h-full gap-4">
@@ -99,25 +123,60 @@ export function MarkupPreview({ state }: MarkupPreviewProps) {
         
         <div className={cn(
             "flex-1 flex items-center justify-center overflow-auto rounded-lg p-8",
-            state.theme === 'dark' ? "bg-neutral-900" : "bg-secondary/50"
+            isDarkTheme ? "bg-neutral-900" : "bg-secondary/50"
         )}>
             <div 
                 ref={previewRef}
                 style={{
                     borderRadius: `${state.borderRadius}px`,
-                }}
+                    backgroundColor: state.transparent ? 'transparent' : themeColors.bg,
+                    color: themeColors.fg,
+                    // Override prose colors to match theme
+                    '--tw-prose-body': themeColors.fg,
+                    '--tw-prose-headings': themeColors.fg,
+                    '--tw-prose-lead': themeColors.fg,
+                    '--tw-prose-links': themeColors.fg,
+                    '--tw-prose-bold': themeColors.fg,
+                    '--tw-prose-counters': themeColors.fg,
+                    '--tw-prose-bullets': themeColors.fg,
+                    '--tw-prose-hr': themeColors.fg,
+                    '--tw-prose-quotes': themeColors.fg,
+                    '--tw-prose-quote-borders': themeColors.fg,
+                    '--tw-prose-captions': themeColors.fg,
+                    '--tw-prose-code': themeColors.fg,
+                    '--tw-prose-pre-code': themeColors.fg,
+                    '--tw-prose-pre-bg': themeColors.bg,
+                    '--tw-prose-th-borders': themeColors.fg,
+                    '--tw-prose-td-borders': themeColors.fg,
+                    // Override prose-invert colors to match theme
+                    '--tw-prose-invert-body': themeColors.fg,
+                    '--tw-prose-invert-headings': themeColors.fg,
+                    '--tw-prose-invert-lead': themeColors.fg,
+                    '--tw-prose-invert-links': themeColors.fg,
+                    '--tw-prose-invert-bold': themeColors.fg,
+                    '--tw-prose-invert-counters': themeColors.fg,
+                    '--tw-prose-invert-bullets': themeColors.fg,
+                    '--tw-prose-invert-hr': themeColors.fg,
+                    '--tw-prose-invert-quotes': themeColors.fg,
+                    '--tw-prose-invert-quote-borders': themeColors.fg,
+                    '--tw-prose-invert-captions': themeColors.fg,
+                    '--tw-prose-invert-code': themeColors.fg,
+                    '--tw-prose-invert-pre-code': themeColors.fg,
+                    '--tw-prose-invert-pre-bg': themeColors.bg,
+                    '--tw-prose-invert-th-borders': themeColors.fg,
+                    '--tw-prose-invert-td-borders': themeColors.fg,
+                } as React.CSSProperties}
                 className={cn(
                     "min-w-[300px] shadow-xl transition-all duration-300 fit-content",
                     state.window ? "mockup-window border border-neutral-200 dark:border-neutral-800" : "",
-                    state.transparent ? "bg-transparent" : (state.theme === 'dark' ? "bg-black" : "bg-white"),
-                    state.theme === 'dark' ? 'text-white dark' : 'text-black'
+                    isDarkTheme ? "dark" : ""
                 )}
             >
                 <div style={{ padding: `${state.padding}px` }}>
                     {state.language === 'latex' && <LatexRenderer content={state.content} />}
                     {state.language === 'mermaid' && <MermaidRenderer content={state.content} />}
-                    {state.language === 'code' && <CodeRenderer content={state.content} language={state.codeLanguage} theme={state.theme} />}
-                    {state.language === 'markdown' && <MarkdownRenderer content={state.content} theme={state.theme} />}
+                    {state.language === 'code' && <CodeRenderer content={state.content} language={state.codeLanguage} theme={state.theme} showLineNumbers={state.showLineNumbers} />}
+                    {state.language === 'markdown' && <MarkdownRenderer content={state.content} theme={state.theme} showLineNumbers={state.showLineNumbers} />}
                 </div>
             </div>
         </div>

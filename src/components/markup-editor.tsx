@@ -5,7 +5,7 @@ import { Slider } from "@/components/ui/slider"
 import { Switch } from "@/components/ui/switch"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Button } from "@/components/ui/button"
-import { MarkupState, Language, Theme } from "@/lib/url-state"
+import { MarkupState, Language, Theme, defaultState } from "@/lib/url-state"
 import { EXAMPLES, CODE_EXAMPLES } from "@/lib/examples"
 import { SUPPORTED_LANGUAGES } from "@/lib/highlighter"
 
@@ -25,7 +25,26 @@ export function MarkupEditor({ state, onChange }: MarkupEditorProps) {
         <Label>Language</Label>
         <Tabs 
           value={state.language} 
-          onValueChange={(v) => onChange({ language: v as Language })}
+          onValueChange={(v) => {
+            const lang = v as Language;
+            const updates: Partial<MarkupState> = { language: lang };
+            
+            // If content is one of the default/example contents of the previous language,
+            // or if it's the initial default, switch it to the first example of the new language.
+            const allExamples = [...EXAMPLES.latex, ...EXAMPLES.mermaid, ...EXAMPLES.markdown, ...Object.values(CODE_EXAMPLES).flat()];
+            const isExample = allExamples.some(ex => ex.content === state.content);
+            
+            if (isExample || state.content === defaultState.content) {
+              const nextExamples = lang === 'code' 
+                ? (CODE_EXAMPLES[state.codeLanguage] || [])
+                : EXAMPLES[lang];
+              if (nextExamples.length > 0) {
+                updates.content = nextExamples[0].content;
+              }
+            }
+            
+            onChange(updates);
+          }}
           className="w-full"
         >
           <TabsList className="w-full">
@@ -126,6 +145,17 @@ export function MarkupEditor({ state, onChange }: MarkupEditorProps) {
           />
         </div>
 
+        {(state.language === 'code' || state.language === 'markdown') && (
+          <div className="flex items-center justify-between">
+            <Label htmlFor="line-numbers">Show Line Numbers</Label>
+            <Switch
+              id="line-numbers"
+              checked={state.showLineNumbers}
+              onCheckedChange={(v) => onChange({ showLineNumbers: v })}
+            />
+          </div>
+        )}
+
         <div className="space-y-3">
           <Label>Theme</Label>
           <Select 
@@ -138,6 +168,12 @@ export function MarkupEditor({ state, onChange }: MarkupEditorProps) {
             <SelectContent>
               <SelectItem value="light">Light</SelectItem>
               <SelectItem value="dark">Dark</SelectItem>
+              <SelectItem value="dracula">Dracula</SelectItem>
+              <SelectItem value="monokai">Monokai</SelectItem>
+              <SelectItem value="nord">Nord</SelectItem>
+              <SelectItem value="material-theme-ocean">Material Ocean</SelectItem>
+              <SelectItem value="solarized-light">Solarized Light</SelectItem>
+              <SelectItem value="solarized-dark">Solarized Dark</SelectItem>
             </SelectContent>
           </Select>
         </div>
