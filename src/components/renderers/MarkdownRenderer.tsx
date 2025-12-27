@@ -1,10 +1,10 @@
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { getHighlighter } from '@/lib/highlighter';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const CodeBlock = ({ inline, className, children, ...props }: any) => {
+const CodeBlock = ({ inline, className, children, theme, ...props }: any) => {
   const match = /language-(\w+)/.exec(className || '');
   const lang = match ? match[1] : 'text';
   const code = String(children).replace(/\n$/, '');
@@ -22,7 +22,7 @@ const CodeBlock = ({ inline, className, children, ...props }: any) => {
          
          const out = highlighter.codeToHtml(code, {
            lang: targetLang,
-           theme: 'github-light' // TODO: Support theme switching
+           theme: theme === 'dark' ? 'github-dark' : 'github-light'
          });
          setHtml(out);
        } catch (e) {
@@ -31,7 +31,7 @@ const CodeBlock = ({ inline, className, children, ...props }: any) => {
        }
     });
     return () => { isMounted = false; };
-  }, [code, lang, inline]);
+  }, [code, lang, inline, theme]);
 
   if (inline) {
     return <code className={className} {...props}>{children}</code>;
@@ -45,19 +45,16 @@ const CodeBlock = ({ inline, className, children, ...props }: any) => {
 };
 
 export function MarkdownRenderer({ content, theme }: { content: string, theme: 'light' | 'dark' }) {
-  // Theme prop is currently unused but prepared for future theme support
-  // For now, shiki uses fixed github-light.
-  // To use theme, we need to pass it to CodeBlock via Context or refactoring CodeBlock.
-  // Suppress unused warning by using it in a trivial way or ignore.
-  void theme;
+  const components = useMemo(() => ({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    code: (props: any) => <CodeBlock {...props} theme={theme} />
+  }), [theme]);
 
   return (
     <div className="prose dark:prose-invert max-w-none">
       <ReactMarkdown 
         remarkPlugins={[remarkGfm]}
-        components={{
-            code: CodeBlock
-        }}
+        components={components}
       >
         {content}
       </ReactMarkdown>

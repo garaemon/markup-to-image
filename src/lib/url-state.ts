@@ -11,6 +11,7 @@ export interface MarkupState {
   borderRadius: number;
   transparent: boolean;
   theme: Theme;
+  window: boolean;
 }
 
 export const defaultState: MarkupState = {
@@ -21,6 +22,7 @@ export const defaultState: MarkupState = {
   borderRadius: 16,
   transparent: false,
   theme: 'light',
+  window: false,
 };
 
 export function encodeState(state: MarkupState): string {
@@ -32,6 +34,7 @@ export function encodeState(state: MarkupState): string {
   params.set('r', state.borderRadius.toString());
   params.set('t', state.transparent ? '1' : '0');
   params.set('h', state.theme);
+  params.set('w', state.window ? '1' : '0');
   return params.toString();
 }
 
@@ -43,6 +46,7 @@ export function decodeState(searchParams: URLSearchParams): MarkupState {
   const r = searchParams.get('r');
   const t = searchParams.get('t');
   const h = searchParams.get('h') as Theme;
+  const w = searchParams.get('w');
 
   return {
     language: ['latex', 'mermaid', 'markdown', 'code'].includes(l) ? l : defaultState.language,
@@ -52,5 +56,6 @@ export function decodeState(searchParams: URLSearchParams): MarkupState {
     borderRadius: r ? parseInt(r, 10) : defaultState.borderRadius,
     transparent: t === '1',
     theme: ['light', 'dark'].includes(h) ? h : defaultState.theme,
+    window: w === '1',
   };
 }

@@ -117,6 +117,15 @@ export function MarkupEditor({ state, onChange }: MarkupEditorProps) {
           />
         </div>
 
+        <div className="flex items-center justify-between">
+          <Label htmlFor="window-mode">Window Control</Label>
+          <Switch
+            id="window-mode"
+            checked={state.window}
+            onCheckedChange={(v) => onChange({ window: v })}
+          />
+        </div>
+
         <div className="space-y-3">
           <Label>Theme</Label>
           <Select 
