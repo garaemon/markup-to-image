@@ -1,7 +1,8 @@
 import LZString from 'lz-string';
+import { SUPPORTED_THEMES } from './highlighter';
 
 export type Language = 'latex' | 'mermaid' | 'markdown' | 'code';
-export type Theme = 'light' | 'dark';
+export type Theme = 'light' | 'dark' | 'monokai' | 'nord' | 'material-theme-ocean' | 'dracula' | 'github-light' | 'github-dark' | 'solarized-light' | 'solarized-dark';
 
 export interface MarkupState {
   language: Language;
@@ -13,6 +14,7 @@ export interface MarkupState {
   transparent: boolean;
   theme: Theme;
   window: boolean;
+  showLineNumbers: boolean;
 }
 
 export const defaultState: MarkupState = {
@@ -25,6 +27,7 @@ export const defaultState: MarkupState = {
   transparent: false,
   theme: 'light',
   window: false,
+  showLineNumbers: false,
 };
 
 export function encodeState(state: MarkupState): string {
@@ -38,6 +41,7 @@ export function encodeState(state: MarkupState): string {
   params.set('t', state.transparent ? '1' : '0');
   params.set('h', state.theme);
   params.set('w', state.window ? '1' : '0');
+  params.set('sn', state.showLineNumbers ? '1' : '0');
   return params.toString();
 }
 
@@ -51,6 +55,14 @@ export function decodeState(searchParams: URLSearchParams): MarkupState {
   const t = searchParams.get('t');
   const h = searchParams.get('h') as Theme;
   const w = searchParams.get('w');
+  const sn = searchParams.get('sn');
+
+  // Map legacy 'light'/'dark' to github themes if desired, or keep them as aliases
+  // For now, let's treat 'light' as 'github-light' and 'dark' as 'github-dark' eventually,
+  // but to keep compatibility, we allow them in the type.
+  // Actually, let's just allow anything in SUPPORTED_THEMES plus 'light'/'dark'
+
+  const validTheme = (SUPPORTED_THEMES.includes(h) || h === 'light' || h === 'dark');
 
   return {
     language: ['latex', 'mermaid', 'markdown', 'code'].includes(l) ? l : defaultState.language,
@@ -60,7 +72,8 @@ export function decodeState(searchParams: URLSearchParams): MarkupState {
     borderRadius: r ? parseInt(r, 10) : defaultState.borderRadius,
     width: wd && wd !== 'auto' ? parseInt(wd, 10) : 'auto',
     transparent: t === '1',
-    theme: ['light', 'dark'].includes(h) ? h : defaultState.theme,
+    theme: validTheme ? h : defaultState.theme,
     window: w === '1',
+    showLineNumbers: sn === '1',
   };
 }

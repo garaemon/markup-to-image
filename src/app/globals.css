@@ -141,7 +141,31 @@
     width: 0.75rem;
     height: 0.75rem;
     border-radius: 9999px;
-    opacity: 1;
-    box-shadow: 1.4em 0 #ff5f56, 2.8em 0 #ffbd2e, 4.2em 0 #27c93f;
+    background: #ff5f56;
+    box-shadow: 1.25rem 0 #ffbd2e, 2.5rem 0 #27c93f;
+  }
+
+  .show-line-numbers pre {
+    counter-reset: line;
+  }
+
+  .show-line-numbers pre .line::before {
+    content: counter(line);
+    counter-increment: line;
+    width: 1.5rem;
+    margin-right: 1rem;
+    display: inline-block;
+    text-align: right;
+    color: currentColor;
+    opacity: 0.3;
+  }
+
+  .shiki code {
+    display: grid;
+  }
+
+  .shiki .line {
+    display: block;
+    min-height: 1.5rem;
   }
 }

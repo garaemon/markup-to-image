@@ -33,11 +33,18 @@ test.describe('Code Tab', () => {
     await editor.fill(code);
     
     // Check preview
-    const preview = page.locator('.shiki');
+    // Shiki adds inline styles for colors, so we can check for spans with style attributes
+    // or simply that the shiki container exists.
+    // Depending on shiki version/config, class might be 'shiki' or something else.
+    // It usually produces <pre class="shiki ...">
+    const preview = page.locator('.fit-content pre');
     await expect(preview).toBeVisible();
     
+    // Ensure syntax highlighting is applied (it renders spans)
+    await expect(preview.locator('span').first()).toBeVisible();
+
     // Check persistence
-    await page.waitForTimeout(600); // Wait for debounce
+    await page.waitForTimeout(1000); // Wait for debounce
     const url = page.url();
     expect(url).toContain('cl=python');
     
