@@ -108,7 +108,7 @@ export function MarkupPreview({ state }: MarkupPreviewProps) {
                     width: state.width === 'auto' ? 'auto' : `${state.width}px`,
                 }}
                 className={cn(
-                    "min-w-[300px] shadow-xl transition-all duration-300 w-fit m-auto flex-shrink-0",
+                    "min-w-[300px] shadow-xl transition-all duration-300 w-fit m-auto flex-shrink-0 fit-content",
                     state.window ? "mockup-window border border-neutral-200 dark:border-neutral-800" : "",
                     state.transparent ? "bg-transparent" : (state.theme === 'dark' ? "bg-black" : "bg-white"),
                     state.theme === 'dark' ? 'text-white dark' : 'text-black'
