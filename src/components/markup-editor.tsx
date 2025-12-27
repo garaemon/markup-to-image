@@ -135,7 +135,7 @@ export function MarkupEditor({ state, onChange }: MarkupEditorProps) {
               <span className="text-xs text-muted-foreground">Auto</span>
               <Switch
                 checked={state.width === 'auto'}
-                onCheckedChange={(v) => onChange({ width: v ? 'auto' : 800 })}
+                onCheckedChange={(v) => onChange({ width: v ? 'auto' : 600 })}
               />
             </div>
           </div>
