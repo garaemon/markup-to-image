@@ -2,6 +2,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { useEffect, useState, useMemo } from 'react';
 import { getHighlighter } from '@/lib/highlighter';
+import { cn } from '@/lib/utils';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const CodeBlock = ({ inline, className, children, theme, ...props }: any) => {
@@ -38,11 +39,11 @@ const CodeBlock = ({ inline, className, children, theme, ...props }: any) => {
   }, [code, lang, inline, theme]);
 
   if (inline) {
-    return <code className={className} {...props}>{children}</code>;
+    return <code className={cn("bg-muted/50 px-1.5 py-0.5 rounded-md font-mono text-sm", className)} {...props}>{children}</code>;
   }
 
   if (!html) {
-    return <pre className={className} {...props}><code>{children}</code></pre>;
+    return <pre className={cn("!bg-transparent !p-0", className)} {...props}><code>{children}</code></pre>;
   }
 
   return <div dangerouslySetInnerHTML={{ __html: html }} className="[&>pre]:!bg-transparent [&>pre]:!p-0 [&>pre]:text-base [&>pre]:leading-relaxed [&>pre]:whitespace-pre-wrap [&>pre]:break-words my-4" />;
@@ -55,7 +56,7 @@ export function MarkdownRenderer({ content, theme }: { content: string, theme: s
   }), [theme]);
 
   return (
-    <div className="prose dark:prose-invert max-w-none prose-pre:my-0 prose-code:before:content-none prose-code:after:content-none">
+    <div className="prose dark:prose-invert max-w-none prose-pre:my-0 prose-pre:bg-transparent prose-pre:p-0 prose-code:before:content-none prose-code:after:content-none">
       <ReactMarkdown 
         remarkPlugins={[remarkGfm]}
         components={components}
