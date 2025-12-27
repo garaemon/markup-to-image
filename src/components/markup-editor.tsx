@@ -1,6 +1,7 @@
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input"
 import { Slider } from "@/components/ui/slider"
 import { Switch } from "@/components/ui/switch"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -12,9 +13,10 @@ import { SUPPORTED_LANGUAGES } from "@/lib/highlighter"
 interface MarkupEditorProps {
   state: MarkupState
   onChange: (updates: Partial<MarkupState>) => void
+  autoWidth?: number
 }
 
-export function MarkupEditor({ state, onChange }: MarkupEditorProps) {
+export function MarkupEditor({ state, onChange, autoWidth }: MarkupEditorProps) {
   const currentExamples = state.language === 'code' 
     ? (CODE_EXAMPLES[state.codeLanguage] || [])
     : EXAMPLES[state.language];
@@ -124,6 +126,60 @@ export function MarkupEditor({ state, onChange }: MarkupEditorProps) {
             onValueChange={([v]) => onChange({ borderRadius: v })}
             max={40}
             step={2}
+          />
+        </div>
+
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <Label>Width</Label>
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-muted-foreground">Auto</span>
+              <Switch
+                checked={state.width === 'auto'}
+                onCheckedChange={(v) => onChange({ width: v ? 'auto' : (Math.round(autoWidth || 600)) })}
+              />
+            </div>
+          </div>
+          {state.width !== 'auto' && (
+            <div className="flex gap-2 items-center">
+              <Slider
+                value={[state.width]}
+                onValueChange={([v]) => onChange({ width: v })}
+                min={100}
+                max={4000}
+                step={10}
+                className="flex-1"
+              />
+              <Input
+                type="number"
+                value={state.width}
+                onChange={(e) => {
+                  const val = parseInt(e.target.value);
+                  if (!isNaN(val)) onChange({ width: val });
+                }}
+                className="w-20 h-8"
+              />
+              <span className="text-xs text-muted-foreground">px</span>
+            </div>
+          )}
+          {state.width !== 'auto' && (
+             <p className="text-[10px] text-muted-foreground italic">
+                Export size: {Math.round(state.width * state.scale)}px wide
+             </p>
+          )}
+        </div>
+
+        <div className="space-y-3">
+          <div className="flex justify-between">
+            <Label>Export Scale</Label>
+            <span className="text-xs text-muted-foreground">{state.scale}x</span>
+          </div>
+          <Slider
+            value={[state.scale]}
+            onValueChange={([v]) => onChange({ scale: v })}
+            min={1}
+            max={5}
+            step={0.5}
           />
         </div>
 

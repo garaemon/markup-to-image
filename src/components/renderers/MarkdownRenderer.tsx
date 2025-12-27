@@ -15,8 +15,8 @@ const CodeBlock = ({ inline, className, children, theme, showLineNumbers, ...pro
     if (inline) return;
 
     let isMounted = true;
-    const targetTheme = theme === 'light' ? 'github-light' : 
-                        theme === 'dark' ? 'github-dark' : 
+    const targetTheme = theme === 'light' ? 'github-light' :
+                        theme === 'dark' ? 'github-dark' :
                         theme;
 
     getHighlighter().then(highlighter => {

@@ -10,6 +10,8 @@ export interface MarkupState {
   content: string;
   padding: number;
   borderRadius: number;
+  width: number | 'auto';
+  scale: number;
   transparent: boolean;
   theme: Theme;
   window: boolean;
@@ -19,9 +21,11 @@ export interface MarkupState {
 export const defaultState: MarkupState = {
   language: 'latex',
   codeLanguage: 'typescript',
-  content: 'c = \\sqrt{a^2 + b^2}',
+  content: 'c = \sqrt{a^2 + b^2}',
   padding: 32,
   borderRadius: 16,
+  width: 'auto',
+  scale: 2,
   transparent: false,
   theme: 'light',
   window: false,
@@ -60,6 +64,16 @@ export const URL_PARAMETERS: Record<keyof MarkupState, UrlParameterInfo> = {
   borderRadius: {
     key: 'r',
     description: 'Border radius of the container (pixels)',
+    type: 'number',
+  },
+  width: {
+    key: 'wd',
+    description: 'Width of the image (pixels or "auto")',
+    type: 'number',
+  },
+  scale: {
+    key: 's',
+    description: 'Scale factor for the image',
     type: 'number',
   },
   transparent: {
@@ -115,8 +129,10 @@ export function decodeState(searchParams: URLSearchParams): MarkupState {
 
     if (name === 'content') {
       state[name] = LZString.decompressFromEncodedURIComponent(rawValue) || defaultState.content;
+    } else if (name === 'width') {
+      state[name] = rawValue === 'auto' ? 'auto' : parseInt(rawValue, 10);
     } else if (info.type === 'number') {
-      state[name] = parseInt(rawValue, 10) as never;
+      state[name] = (name === 'scale' ? parseFloat(rawValue) : parseInt(rawValue, 10)) as never;
     } else if (info.type === 'boolean') {
       state[name] = (rawValue === '1') as never;
     } else if (info.type === 'enum' && info.options) {
