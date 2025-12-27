@@ -45,7 +45,7 @@ const CodeBlock = ({ inline, className, children, theme, ...props }: any) => {
     return <pre className={className} {...props}><code>{children}</code></pre>;
   }
 
-  return <div dangerouslySetInnerHTML={{ __html: html }} />;
+  return <div dangerouslySetInnerHTML={{ __html: html }} className="[&>pre]:!bg-transparent [&>pre]:!p-0" />;
 };
 
 export function MarkdownRenderer({ content, theme }: { content: string, theme: string }) {
