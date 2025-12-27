@@ -58,10 +58,9 @@ This is a **markdown** example.
 - List item 1
 - List item 2
 
-\\
 \`\`\`javascript
 console.log('Hello');
-\`\`\`\\
+\`\`\`
 `
     },
     {
@@ -293,7 +292,7 @@ fn main() {
       content: `#include <stdio.h>
 
 int main() {
-    printf("Hello, World!\n");
+    printf("Hello, World!\\n");
     return 0;
 }`
     }
