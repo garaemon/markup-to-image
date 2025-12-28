@@ -21,7 +21,7 @@ export interface MarkupState {
 export const defaultState: MarkupState = {
   language: 'latex',
   codeLanguage: 'typescript',
-  content: 'c = \sqrt{a^2 + b^2}',
+  content: 'c = \\\sqrt{a^2 + b^2}',
   padding: 32,
   borderRadius: 16,
   width: 'auto',
@@ -101,7 +101,7 @@ export const URL_PARAMETERS: Record<keyof MarkupState, UrlParameterInfo> = {
 
 export function encodeState(state: MarkupState): string {
   const params = new URLSearchParams();
-  
+
   (Object.entries(URL_PARAMETERS) as [keyof MarkupState, UrlParameterInfo][]).forEach(([name, info]) => {
     const value = state[name];
     if (value === undefined) return;
