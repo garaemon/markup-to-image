@@ -59,26 +59,28 @@ export function MarkupEditor({ state, onChange, autoWidth }: MarkupEditorProps) 
       </div>
 
       <div className="space-y-4">
-        <div className="flex justify-between items-center">
-          <Label>Content</Label>
-          <div className="flex gap-2">
+        <div className="flex flex-col gap-2">
+          <div className="flex justify-between items-center">
+            <Label>Content</Label>
             {state.language === 'code' && (
-               <Select
-                 value={state.codeLanguage}
-                 onValueChange={(v) => onChange({ codeLanguage: v })}
-               >
-                 <SelectTrigger className="w-[140px] h-8 text-xs">
-                   <SelectValue />
-                 </SelectTrigger>
-                 <SelectContent>
-                   {SUPPORTED_LANGUAGES.map((lang) => (
-                     <SelectItem key={lang} value={lang}>
-                       {lang}
-                     </SelectItem>
-                   ))}
-                 </SelectContent>
-               </Select>
+              <Select
+                value={state.codeLanguage}
+                onValueChange={(v) => onChange({ codeLanguage: v })}
+              >
+                <SelectTrigger className="w-[140px] h-8 text-xs">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {SUPPORTED_LANGUAGES.map((lang) => (
+                    <SelectItem key={lang} value={lang}>
+                      {lang}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             )}
+          </div>
+          <div className="flex gap-2 flex-wrap justify-end">
             {currentExamples.map((example) => (
               <Button
                 key={example.name}
