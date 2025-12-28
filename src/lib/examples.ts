@@ -337,19 +337,23 @@ int main() {
   ],
   latex: [
     {
-      name: "Document",
+      name: "Equation",
       content: `\\documentclass{article}
-\\usepackage{graphicx}
+\\usepackage{amsmath}
 
 \\begin{document}
 
-\\title{Introduction to \\LaTeX}
-\\author{Author Name}
+\\section{Equations}
+Maxwell's equations are a set of partial differential equations that, together with the Lorentz force law, form the foundation of classical electromagnetism:
 
-\\maketitle
-
-\\section{Introduction}
-Here is some text.
+\\begin{equation}
+\\begin{aligned}
+\\nabla \\cdot \\mathbf{E} &= \\frac{\\rho}{\\varepsilon_0} \\\\
+\\nabla \\cdot \\mathbf{B} &= 0 \\\\
+\\nabla \\times \\mathbf{E} &= -\\frac{\\partial \\mathbf{B}}{\\partial t} \\\\
+\\nabla \\times \\mathbf{B} &= \\mu_0\\left(\\mathbf{J} + \\varepsilon_0 \\frac{\\partial \\mathbf{E}}{\\partial t}\\right)
+\\end{aligned}
+\\end{equation}
 
 \\end{document}`
     }
