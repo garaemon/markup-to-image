@@ -71,7 +71,7 @@ export function MarkupEditor({ state, onChange, autoWidth }: MarkupEditorProps) 
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {SUPPORTED_LANGUAGES.map((lang) => (
+                  {[...SUPPORTED_LANGUAGES].sort().map((lang) => (
                     <SelectItem key={lang} value={lang}>
                       {lang}
                     </SelectItem>
