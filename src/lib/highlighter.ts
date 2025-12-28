@@ -4,7 +4,9 @@ let highlighterPromise: Promise<Highlighter> | null = null;
 
 export const SUPPORTED_LANGUAGES = [
   'javascript', 'typescript', 'python', 'json', 'html', 'css', 'bash', 
-  'markdown', 'yaml', 'tsx', 'jsx', 'go', 'rust', 'java', 'c', 'cpp'
+  'markdown', 'yaml', 'tsx', 'jsx', 'go', 'rust', 'java', 'c', 'cpp',
+  'bibtex', 'latex', 'ruby', 'lisp', 'emacs-lisp', 'kotlin', 'swift', 
+  'mermaid', 'objective-c', 'perl', 'php', 'r', 'toml', 'vhdl', 'system-verilog'
 ];
 
 export const SUPPORTED_THEMES = [
