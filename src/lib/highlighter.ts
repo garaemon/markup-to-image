@@ -3,8 +3,8 @@ import { createHighlighter, Highlighter } from 'shiki';
 let highlighterPromise: Promise<Highlighter> | null = null;
 
 export const SUPPORTED_LANGUAGES = [
-  'javascript', 'typescript', 'python', 'json', 'html', 'css', 'bash', 
-  'markdown', 'yaml', 'tsx', 'jsx', 'go', 'rust', 'java', 'c', 'cpp'
+  'bash', 'c', 'cpp', 'css', 'go', 'html', 'java', 'javascript', 'json', 'jsx',
+  'markdown', 'python', 'rust', 'tsx', 'typescript', 'yaml'
 ];
 
 export const SUPPORTED_THEMES = [
