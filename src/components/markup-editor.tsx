@@ -167,6 +167,7 @@ export function MarkupEditor({ state, onChange, autoWidth }: MarkupEditorProps) 
             padding={12}
             className="font-mono h-full min-h-[300px]"
             textareaClassName="focus:outline-none"
+            placeholder="Enter your markup here..."
             style={{
               fontFamily: '"Fira Code", "Fira Mono", monospace',
               fontSize: 14,
