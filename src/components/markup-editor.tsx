@@ -1,5 +1,4 @@
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Slider } from "@/components/ui/slider"
@@ -9,6 +8,41 @@ import { Button } from "@/components/ui/button"
 import { MarkupState, Language, Theme, defaultState } from "@/lib/url-state"
 import { EXAMPLES, CODE_EXAMPLES } from "@/lib/examples"
 import { SUPPORTED_LANGUAGES } from "@/lib/highlighter"
+import Editor from 'react-simple-code-editor';
+import Prism from 'prismjs';
+import 'prismjs/components/prism-markup';
+import 'prismjs/components/prism-css';
+import 'prismjs/components/prism-javascript';
+import 'prismjs/components/prism-typescript';
+import 'prismjs/components/prism-python';
+import 'prismjs/components/prism-json';
+import 'prismjs/components/prism-bash';
+import 'prismjs/components/prism-markdown';
+import 'prismjs/components/prism-yaml';
+import 'prismjs/components/prism-jsx';
+import 'prismjs/components/prism-tsx';
+import 'prismjs/components/prism-go';
+import 'prismjs/components/prism-rust';
+import 'prismjs/components/prism-java';
+import 'prismjs/components/prism-c';
+import 'prismjs/components/prism-cpp';
+import 'prismjs/components/prism-latex';
+import 'prismjs/themes/prism-tomorrow.css';
+import { cn } from "@/lib/utils"
+
+// Define Mermaid grammar for Prism
+if (typeof window !== 'undefined' && Prism) {
+  Prism.languages.mermaid = {
+    'comment': /%%.*/,
+    'string': {
+      pattern: /"(?:""|[^"])*"/,
+      greedy: true
+    },
+    'keyword': /\b(?:graph|flowchart|sequenceDiagram|gantt|classDiagram|stateDiagram-v2|stateDiagram|erDiagram|pie|journey|gitGraph|requirementDiagram|mindmap|timeline|quadrantChart|C4Context|C4Container|C4Component|C4Dynamic|C4Deployment|sankey-beta|TD|BT|RL|LR|subgraph|end|participant|actor|links?|over|activate|deactivate|note|as|rect|loop|alt|else|opt|par|and|critical|option|break|try|catch|finally|autonumber)\b/,
+    'operator': /--?>|==?>|--|==|\||:|-|\+/,
+    'punctuation': /[(){}\[\]]/
+  };
+}
 
 interface MarkupEditorProps {
   state: MarkupState
@@ -20,6 +54,36 @@ export function MarkupEditor({ state, onChange, autoWidth }: MarkupEditorProps) 
   const currentExamples = state.language === 'code' 
     ? (CODE_EXAMPLES[state.codeLanguage] || [])
     : EXAMPLES[state.language];
+
+  const highlight = (code: string) => {
+    let lang = Prism.languages.plaintext;
+    let langName = 'plaintext';
+
+    if (state.language === 'markdown') {
+      lang = Prism.languages.markdown;
+      langName = 'markdown';
+    } else if (state.language === 'latex') {
+      lang = Prism.languages.latex || Prism.languages.markdown;
+      langName = 'latex';
+    } else if (state.language === 'mermaid') {
+      lang = Prism.languages.mermaid || Prism.languages.markdown;
+      langName = 'mermaid';
+    } else if (state.language === 'code') {
+      // Map code languages to Prism keys if they differ
+      const langMap: Record<string, string> = {
+        'html': 'markup',
+      };
+      
+      const prismKey = langMap[state.codeLanguage] || state.codeLanguage;
+      
+      if (Prism.languages[prismKey]) {
+        lang = Prism.languages[prismKey];
+        langName = prismKey;
+      }
+    }
+
+    return Prism.highlight(code, lang, langName);
+  };
 
   return (
     <div className="flex flex-col gap-6">
@@ -94,12 +158,26 @@ export function MarkupEditor({ state, onChange, autoWidth }: MarkupEditorProps) 
             ))}
           </div>
         </div>
-        <Textarea
-          value={state.content}
-          onChange={(e) => onChange({ content: e.target.value })}
-          className="font-mono h-[300px] resize-y"
-          placeholder="Enter your markup here..."
-        />
+        <div className={cn(
+          "border-input focus-within:border-ring focus-within:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 min-h-[300px] w-full rounded-md border bg-transparent text-base shadow-xs transition-[color,box-shadow] outline-none focus-within:ring-[3px] md:text-sm overflow-hidden",
+          "flex flex-col" // Ensure Editor takes height
+        )}>
+          <Editor
+            value={state.content}
+            onValueChange={(code) => onChange({ content: code })}
+            highlight={highlight}
+            padding={12}
+            className="font-mono h-full min-h-[300px]"
+            textareaClassName="focus:outline-none"
+            placeholder="Enter your markup here..."
+            style={{
+              fontFamily: '"Fira Code", "Fira Mono", monospace',
+              fontSize: 14,
+              backgroundColor: 'transparent',
+              minHeight: '300px',
+            }}
+          />
+        </div>
       </div>
 
       <div className="space-y-6 border-t pt-6">
