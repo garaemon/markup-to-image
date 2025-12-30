@@ -304,6 +304,13 @@ export function MarkupEditor({ state, onChange, autoWidth }: MarkupEditorProps) 
             <SelectContent>
               <SelectItem value="light">Light</SelectItem>
               <SelectItem value="dark">Dark</SelectItem>
+              <SelectItem value="github-light">GitHub Light</SelectItem>
+              <SelectItem value="github-dark">GitHub Dark</SelectItem>
+              <SelectItem value="github-light-default">GitHub Light Default</SelectItem>
+              <SelectItem value="github-dark-default">GitHub Dark Default</SelectItem>
+              <SelectItem value="github-dark-dimmed">GitHub Dark Dimmed</SelectItem>
+              <SelectItem value="github-light-high-contrast">GitHub Light High Contrast</SelectItem>
+              <SelectItem value="github-dark-high-contrast">GitHub Dark High Contrast</SelectItem>
               <SelectItem value="dracula">Dracula</SelectItem>
               <SelectItem value="monokai">Monokai</SelectItem>
               <SelectItem value="nord">Nord</SelectItem>

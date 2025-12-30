@@ -10,8 +10,9 @@ export const SUPPORTED_LANGUAGES = [
 ];
 
 export const SUPPORTED_THEMES = [
-  'github-light', 'github-dark', 'dracula', 
-  'monokai', 'nord', 'material-theme-ocean',
+  'github-light', 'github-dark', 'github-light-default', 'github-dark-default',
+  'github-dark-dimmed', 'github-light-high-contrast', 'github-dark-high-contrast',
+  'dracula', 'monokai', 'nord', 'material-theme-ocean',
   'solarized-light', 'solarized-dark'
 ];
 
