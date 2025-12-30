@@ -27,7 +27,7 @@ import 'prismjs/components/prism-java';
 import 'prismjs/components/prism-c';
 import 'prismjs/components/prism-cpp';
 import 'prismjs/components/prism-latex';
-import 'prismjs/themes/prism-tomorrow.css';
+import 'prismjs/themes/prism.css';
 import { cn } from "@/lib/utils"
 
 // Define Mermaid grammar for Prism
@@ -159,7 +159,7 @@ export function MarkupEditor({ state, onChange, autoWidth }: MarkupEditorProps) 
           </div>
         </div>
         <div className={cn(
-          "border-input focus-within:border-ring focus-within:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 min-h-[300px] w-full rounded-md border bg-transparent text-base shadow-xs transition-[color,box-shadow] outline-none focus-within:ring-[3px] md:text-sm overflow-hidden",
+          "border-input focus-within:border-ring focus-within:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive min-h-[300px] w-full rounded-md border bg-white text-base shadow-xs transition-[color,box-shadow] outline-none focus-within:ring-[3px] md:text-sm overflow-hidden",
           "flex flex-col" // Ensure Editor takes height
         )}>
           <Editor
