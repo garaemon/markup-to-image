@@ -558,5 +558,48 @@ end
 
 endmodule`
     }
+  ],
+  protobuf: [
+    {
+      name: "Person",
+      content: `syntax = "proto3";
+
+message Person {
+  string name = 1;
+  int32 id = 2;
+  string email = 3;
+
+  enum PhoneType {
+    MOBILE = 0;
+    HOME = 1;
+    WORK = 2;
+  }
+
+  message PhoneNumber {
+    string number = 1;
+    PhoneType type = 2;
+  }
+
+  repeated PhoneNumber phones = 4;
+}`
+    },
+    {
+      name: "gRPC Service",
+      content: `syntax = "proto3";
+
+package greeter;
+
+service Greeter {
+  rpc SayHello (HelloRequest) returns (HelloReply) {}
+}
+
+message HelloRequest {
+  string name = 1;
+}
+
+message HelloReply {
+  string message = 1;
+}`
+    }
   ]
 };

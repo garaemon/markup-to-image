@@ -27,6 +27,7 @@ import 'prismjs/components/prism-java';
 import 'prismjs/components/prism-c';
 import 'prismjs/components/prism-cpp';
 import 'prismjs/components/prism-latex';
+import 'prismjs/components/prism-protobuf';
 import 'prismjs/themes/prism.css';
 import { cn } from "@/lib/utils"
 
