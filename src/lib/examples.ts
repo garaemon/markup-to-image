@@ -582,6 +582,24 @@ message Person {
 
   repeated PhoneNumber phones = 4;
 }`
+    },
+    {
+      name: "gRPC Service",
+      content: `syntax = "proto3";
+
+package greeter;
+
+service Greeter {
+  rpc SayHello (HelloRequest) returns (HelloReply) {}
+}
+
+message HelloRequest {
+  string name = 1;
+}
+
+message HelloReply {
+  string message = 1;
+}`
     }
   ]
 };
