@@ -28,6 +28,9 @@ import 'prismjs/components/prism-c';
 import 'prismjs/components/prism-cpp';
 import 'prismjs/components/prism-latex';
 import 'prismjs/components/prism-protobuf';
+import 'prismjs/components/prism-cmake';
+import 'prismjs/components/prism-makefile';
+import "@/lib/prism-rosmsg";
 import 'prismjs/themes/prism.css';
 import { cn } from "@/lib/utils"
 
@@ -130,7 +133,22 @@ export function MarkupEditor({ state, onChange, autoWidth }: MarkupEditorProps) 
             {state.language === 'code' && (
               <Select
                 value={state.codeLanguage}
-                onValueChange={(v) => onChange({ codeLanguage: v })}
+                onValueChange={(v) => {
+                  const updates: Partial<MarkupState> = { codeLanguage: v };
+
+                  // Check if current content matches any example content of the previous language
+                  const allExamples = Object.values(CODE_EXAMPLES).flat();
+                  const isExample = allExamples.some(ex => ex.content === state.content);
+
+                  if (isExample || state.content === defaultState.content) {
+                     const nextExamples = CODE_EXAMPLES[v] || [];
+                     if (nextExamples.length > 0) {
+                        updates.content = nextExamples[0].content;
+                     }
+                  }
+
+                  onChange(updates);
+                }}
               >
                 <SelectTrigger className="w-[140px] h-8 text-xs">
                   <SelectValue />
