@@ -601,5 +601,60 @@ message HelloReply {
   string message = 1;
 }`
     }
+  ],
+  rosmsg: [
+    {
+      name: "Sensor Data",
+      content: `Header header
+uint32 seq
+time stamp
+string frame_id
+float32[] ranges
+float32 min_angle
+float32 max_angle`
+    },
+    {
+      name: "Service",
+      content: `int64 a
+int64 b
+---
+int64 sum`
+    }
+  ],
+  cmake: [
+    {
+      name: "Basic",
+      content: `cmake_minimum_required(VERSION 3.10)
+project(Tutorial)
+
+add_executable(Tutorial tutorial.cxx)`
+    },
+    {
+      name: "Library",
+      content: `add_library(MathFunctions mysqrt.cxx)
+
+# state that anybody linking to us needs to include the current source dir
+# to find MathFunctions.h, while we don't.
+target_include_directories(MathFunctions
+          INTERFACE \${CMAKE_CURRENT_SOURCE_DIR}
+          )
+
+# should we use our own math functions
+option(USE_MYMATH "Use tutorial provided math implementation" ON)
+
+if(USE_MYMATH)
+  target_compile_definitions(MathFunctions PRIVATE "USE_MYMATH")
+endif()`
+    }
+  ],
+  makefile: [
+    {
+      name: "Simple",
+      content: `CC=gcc
+CFLAGS=-I.
+
+hellomake: hellomake.o hellofunc.o
+\t$(CC) -o hellomake hellomake.o hellofunc.o`
+    }
   ]
 };
