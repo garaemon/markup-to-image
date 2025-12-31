@@ -7,46 +7,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Button } from "@/components/ui/button"
 import { MarkupState, Language, Theme, defaultState } from "@/lib/url-state"
 import { EXAMPLES, CODE_EXAMPLES } from "@/lib/examples"
-import { SUPPORTED_LANGUAGES } from "@/lib/highlighter"
+import { SUPPORTED_LANGUAGES, getHighlighter } from "@/lib/highlighter"
 import Editor from 'react-simple-code-editor';
-import Prism from 'prismjs';
-import 'prismjs/components/prism-markup';
-import 'prismjs/components/prism-css';
-import 'prismjs/components/prism-javascript';
-import 'prismjs/components/prism-typescript';
-import 'prismjs/components/prism-python';
-import 'prismjs/components/prism-json';
-import 'prismjs/components/prism-bash';
-import 'prismjs/components/prism-markdown';
-import 'prismjs/components/prism-yaml';
-import 'prismjs/components/prism-jsx';
-import 'prismjs/components/prism-tsx';
-import 'prismjs/components/prism-go';
-import 'prismjs/components/prism-rust';
-import 'prismjs/components/prism-java';
-import 'prismjs/components/prism-c';
-import 'prismjs/components/prism-cpp';
-import 'prismjs/components/prism-latex';
-import 'prismjs/components/prism-protobuf';
-import 'prismjs/components/prism-cmake';
-import 'prismjs/components/prism-makefile';
-import "@/lib/prism-rosmsg";
-import 'prismjs/themes/prism.css';
 import { cn } from "@/lib/utils"
-
-// Define Mermaid grammar for Prism
-if (typeof window !== 'undefined' && Prism) {
-  Prism.languages.mermaid = {
-    'comment': /%%.*/,
-    'string': {
-      pattern: /"(?:""|[^"])*"/,
-      greedy: true
-    },
-    'keyword': /\b(?:graph|flowchart|sequenceDiagram|gantt|classDiagram|stateDiagram-v2|stateDiagram|erDiagram|pie|journey|gitGraph|requirementDiagram|mindmap|timeline|quadrantChart|C4Context|C4Container|C4Component|C4Dynamic|C4Deployment|sankey-beta|TD|BT|RL|LR|subgraph|end|participant|actor|links?|over|activate|deactivate|note|as|rect|loop|alt|else|opt|par|and|critical|option|break|try|catch|finally|autonumber)\b/,
-    'operator': /--?>|==?>|--|==|\||:|-|\+/,
-    'punctuation': /[(){}\[\]]/
-  };
-}
+import { useEffect, useState } from "react"
+import { Highlighter } from "shiki"
 
 interface MarkupEditorProps {
   state: MarkupState
@@ -54,39 +19,66 @@ interface MarkupEditorProps {
   autoWidth?: number
 }
 
+// Helper to escape HTML characters
+const escapeHtml = (unsafe: string) => {
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
 export function MarkupEditor({ state, onChange, autoWidth }: MarkupEditorProps) {
+  const [highlighter, setHighlighter] = useState<Highlighter | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+    getHighlighter().then((h) => {
+      if (mounted) { setHighlighter(h); }
+    });
+    return () => { mounted = false; };
+  }, []);
+
   const currentExamples = state.language === 'code' 
     ? (CODE_EXAMPLES[state.codeLanguage] || [])
     : EXAMPLES[state.language];
 
   const highlight = (code: string) => {
-    let lang = Prism.languages.plaintext;
-    let langName = 'plaintext';
-
-    if (state.language === 'markdown') {
-      lang = Prism.languages.markdown;
-      langName = 'markdown';
-    } else if (state.language === 'latex') {
-      lang = Prism.languages.latex || Prism.languages.markdown;
-      langName = 'latex';
-    } else if (state.language === 'mermaid') {
-      lang = Prism.languages.mermaid || Prism.languages.markdown;
-      langName = 'mermaid';
-    } else if (state.language === 'code') {
-      // Map code languages to Prism keys if they differ
-      const langMap: Record<string, string> = {
-        'html': 'markup',
-      };
-      
-      const prismKey = langMap[state.codeLanguage] || state.codeLanguage;
-      
-      if (Prism.languages[prismKey]) {
-        lang = Prism.languages[prismKey];
-        langName = prismKey;
-      }
+    // Fallback to simple escaping while highlighter loads asynchronously
+    if (!highlighter) {
+      return escapeHtml(code);
     }
 
-    return Prism.highlight(code, lang, langName);
+    let lang = 'plaintext';
+    if (state.language === 'code') {
+      lang = state.codeLanguage;
+    } else if (state.language === 'markdown') {
+      lang = 'markdown';
+    } else if (state.language === 'latex') {
+      lang = 'latex';
+    } else if (state.language === 'mermaid') {
+      lang = 'mermaid';
+    }
+
+    // Ensure lang is supported by shiki (loaded in highlighter.ts)
+    // SUPPORTED_LANGUAGES includes all these, assuming 'latex' and 'mermaid' are there.
+
+    try {
+      const html = highlighter.codeToHtml(code, {
+        lang,
+        theme: 'github-light'
+      });
+
+      // Extract inner HTML from <pre><code>...</code></pre>
+      // Shiki output: <pre ...><code ...>CONTENT</code></pre>
+      const match = html.match(/<code[^>]*>([\s\S]*?)<\/code>/);
+      return match ? match[1] : html;
+    } catch (e) {
+      console.error('Highlight error:', e);
+      // Fallback to simple escaping on error
+      return escapeHtml(code);
+    }
   };
 
   return (
@@ -136,7 +128,10 @@ export function MarkupEditor({ state, onChange, autoWidth }: MarkupEditorProps) 
                 onValueChange={(v) => {
                   const updates: Partial<MarkupState> = { codeLanguage: v };
 
-                  // Check if current content matches any example content of the previous language
+                  // Check if current content matches any example content of the previous language.
+                  // If the user hasn't modified the content (it's still an example or default),
+                  // we automatically switch to the example content for the new language.
+                  // If they have modified it, we preserve their work.
                   const allExamples = Object.values(CODE_EXAMPLES).flat();
                   const isExample = allExamples.some(ex => ex.content === state.content);
 
