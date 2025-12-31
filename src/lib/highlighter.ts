@@ -7,7 +7,7 @@ export const SUPPORTED_LANGUAGES = [
   'markdown', 'yaml', 'tsx', 'jsx', 'go', 'rust', 'java', 'c', 'cpp',
   'bibtex', 'latex', 'ruby', 'lisp', 'emacs-lisp', 'kotlin', 'swift', 
   'mermaid', 'objective-c', 'perl', 'php', 'r', 'toml', 'vhdl', 'system-verilog',
-  'protobuf'
+  'protobuf', 'rosmsg', 'cmake', 'makefile'
 ];
 
 export const SUPPORTED_THEMES = [

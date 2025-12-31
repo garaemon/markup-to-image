@@ -19,13 +19,23 @@ interface MarkupEditorProps {
   autoWidth?: number
 }
 
+// Helper to escape HTML characters
+const escapeHtml = (unsafe: string) => {
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
 export function MarkupEditor({ state, onChange, autoWidth }: MarkupEditorProps) {
   const [highlighter, setHighlighter] = useState<Highlighter | null>(null);
 
   useEffect(() => {
     let mounted = true;
     getHighlighter().then((h) => {
-      if (mounted) setHighlighter(h);
+      if (mounted) { setHighlighter(h); }
     });
     return () => { mounted = false; };
   }, []);
@@ -35,13 +45,9 @@ export function MarkupEditor({ state, onChange, autoWidth }: MarkupEditorProps) 
     : EXAMPLES[state.language];
 
   const highlight = (code: string) => {
+    // Fallback to simple escaping while highlighter loads asynchronously
     if (!highlighter) {
-      return code
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+      return escapeHtml(code);
     }
 
     let lang = 'plaintext';
@@ -70,12 +76,8 @@ export function MarkupEditor({ state, onChange, autoWidth }: MarkupEditorProps) 
       return match ? match[1] : html;
     } catch (e) {
       console.error('Highlight error:', e);
-      return code
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+      // Fallback to simple escaping on error
+      return escapeHtml(code);
     }
   };
 
@@ -123,7 +125,22 @@ export function MarkupEditor({ state, onChange, autoWidth }: MarkupEditorProps) 
             {state.language === 'code' && (
               <Select
                 value={state.codeLanguage}
-                onValueChange={(v) => onChange({ codeLanguage: v })}
+                onValueChange={(v) => {
+                  const updates: Partial<MarkupState> = { codeLanguage: v };
+
+                  // Check if current content matches any example content of the previous language
+                  const allExamples = Object.values(CODE_EXAMPLES).flat();
+                  const isExample = allExamples.some(ex => ex.content === state.content);
+
+                  if (isExample || state.content === defaultState.content) {
+                     const nextExamples = CODE_EXAMPLES[v] || [];
+                     if (nextExamples.length > 0) {
+                        updates.content = nextExamples[0].content;
+                     }
+                  }
+
+                  onChange(updates);
+                }}
               >
                 <SelectTrigger className="w-[140px] h-8 text-xs">
                   <SelectValue />
