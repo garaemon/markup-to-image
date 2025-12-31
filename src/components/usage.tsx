@@ -1,4 +1,5 @@
 import { URL_PARAMETERS, MarkupState } from "@/lib/url-state";
+import { CodeBlock } from "@/components/code-block";
 import {
   FileCode,
   Keyboard,
@@ -6,8 +7,16 @@ import {
   Share2,
   Terminal
 } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export function Usage() {
+  const [origin, setOrigin] = useState('');
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setOrigin(window.location.origin);
+  }, []);
+
   return (
     <div className="space-y-6 max-w-5xl mx-auto p-4 md:p-6">
       <section>
@@ -79,18 +88,21 @@ export function Usage() {
                 Add the following function to your Emacs configuration to share selected regions directly to this service.
               </p>
               <div className="relative">
-                <pre className="bg-muted p-4 rounded-md overflow-x-auto text-xs font-mono border">
-{`(defun markup-share-region (start end)
+                <div className="bg-muted p-4 rounded-md border">
+                  <CodeBlock
+                    language="emacs-lisp"
+                    code={`(defun markup-share-region (start end)
   "Render the selected region using the markup service."
   (interactive "r")
-  (let ((url-base "http://localhost:3000") ;; Change this to your deployed URL
+  (let ((url-base "${origin || 'http://localhost:3000'}") ;; Change this to your deployed URL
         (content (url-hexify-string (buffer-substring-no-properties start end)))
         (lang (cond ((derived-mode-p 'markdown-mode) "markdown")
                     ((derived-mode-p 'latex-mode) "latex")
                     (t "code")))
         (code-lang (replace-regexp-in-string "-mode$" "" (symbol-name major-mode))))
     (browse-url (format "%s/?l=%s&cl=%s&text=%s" url-base lang code-lang content))))`}
-                </pre>
+                  />
+                </div>
               </div>
             </div>
           </div>
