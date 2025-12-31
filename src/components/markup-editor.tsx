@@ -128,7 +128,10 @@ export function MarkupEditor({ state, onChange, autoWidth }: MarkupEditorProps) 
                 onValueChange={(v) => {
                   const updates: Partial<MarkupState> = { codeLanguage: v };
 
-                  // Check if current content matches any example content of the previous language
+                  // Check if current content matches any example content of the previous language.
+                  // If the user hasn't modified the content (it's still an example or default),
+                  // we automatically switch to the example content for the new language.
+                  // If they have modified it, we preserve their work.
                   const allExamples = Object.values(CODE_EXAMPLES).flat();
                   const isExample = allExamples.some(ex => ex.content === state.content);
 
