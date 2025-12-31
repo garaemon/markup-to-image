@@ -3,7 +3,8 @@ import {
   FileCode,
   Keyboard,
   Palette,
-  Share2
+  Share2,
+  Terminal
 } from "lucide-react";
 
 export function Usage() {
@@ -60,6 +61,38 @@ export function Usage() {
             <p className="text-xs text-muted-foreground leading-relaxed">
               Copy URL with state or download as image/PDF.
             </p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2 className="text-xl font-bold mb-3 flex items-center gap-2">
+          Emacs Integration
+        </h2>
+        <div className="border rounded-md bg-card text-card-foreground shadow-sm p-4">
+          <div className="flex items-start gap-4">
+            <div className="p-2 bg-primary/10 rounded-md text-primary shrink-0">
+              <Terminal className="w-6 h-6" />
+            </div>
+            <div className="space-y-4 w-full">
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Add the following function to your Emacs configuration to share selected regions directly to this service.
+              </p>
+              <div className="relative">
+                <pre className="bg-muted p-4 rounded-md overflow-x-auto text-xs font-mono border">
+{`(defun markup-share-region (start end)
+  "Render the selected region using the markup service."
+  (interactive "r")
+  (let ((url-base "http://localhost:3000") ;; Change this to your deployed URL
+        (content (url-hexify-string (buffer-substring-no-properties start end)))
+        (lang (cond ((derived-mode-p 'markdown-mode) "markdown")
+                    ((derived-mode-p 'latex-mode) "latex")
+                    (t "code")))
+        (code-lang (replace-regexp-in-string "-mode$" "" (symbol-name major-mode))))
+    (browse-url (format "%s/?l=%s&cl=%s&text=%s" url-base lang code-lang content))))`}
+                </pre>
+              </div>
+            </div>
           </div>
         </div>
       </section>
