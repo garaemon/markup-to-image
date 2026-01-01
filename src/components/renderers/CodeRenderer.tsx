@@ -12,7 +12,7 @@ export function CodeRenderer({ content, language, theme, showLineNumbers }: { co
                         theme;
 
     getHighlighter().then(highlighter => {
-       if (!isMounted) return;
+       if (!isMounted) {return;}
        try {
          const out = highlighter.codeToHtml(content, {
            lang: language,

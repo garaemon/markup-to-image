@@ -249,7 +249,7 @@ export function MarkupEditor({ state, onChange, autoWidth }: MarkupEditorProps) 
                 value={state.width}
                 onChange={(e) => {
                   const val = parseInt(e.target.value);
-                  if (!isNaN(val)) onChange({ width: val });
+                  if (!isNaN(val)) {onChange({ width: val });}
                 }}
                 className="w-20 h-8"
               />
