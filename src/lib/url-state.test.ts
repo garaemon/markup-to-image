@@ -35,4 +35,36 @@ describe('url-state', () => {
     expect(decoded.language).toBe('mermaid');
     expect(decoded.content).toBe(defaultState.content); // Should use default content
   });
+
+  it('should support raw text content via "text" parameter', () => {
+    const params = new URLSearchParams();
+    params.set('text', 'Hello Raw World');
+
+    const decoded = decodeState(params);
+
+    expect(decoded.content).toBe('Hello Raw World');
+  });
+
+  it('should support raw text content via "txt" parameter', () => {
+    const params = new URLSearchParams();
+    params.set('txt', 'Hello Short Raw World');
+
+    const decoded = decodeState(params);
+
+    expect(decoded.content).toBe('Hello Short Raw World');
+  });
+
+  it('should prioritize LZ-compressed content over "txt" parameter', () => {
+    // LZ compressed 'Compressed Content' (roughly)
+    // We rely on encodeState to get valid compressed string for test
+    const compressedState = encodeState({ ...defaultState, content: 'Compressed Content' });
+    const compressedParams = new URLSearchParams(compressedState);
+
+    // Add text param
+    compressedParams.set('txt', 'Raw Content');
+
+    const decoded = decodeState(compressedParams);
+
+    expect(decoded.content).toBe('Compressed Content');
+  });
 });

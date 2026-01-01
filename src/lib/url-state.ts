@@ -148,5 +148,12 @@ export function decodeState(searchParams: URLSearchParams): MarkupState {
     }
   });
 
+  // Fallback for raw text content if LZ-compressed content is missing
+  // 'txt' is the shorter alias for uncompressed text
+  const rawText = searchParams.get('txt') || searchParams.get('text');
+  if (rawText && !searchParams.has(URL_PARAMETERS.content.key)) {
+    state.content = rawText;
+  }
+
   return state;
 }

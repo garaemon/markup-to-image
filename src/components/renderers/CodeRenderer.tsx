@@ -23,12 +23,13 @@ export function CodeRenderer({ content, language, theme, showLineNumbers }: { co
         setHtml(out);
       } catch (e) {
         console.error(e);
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        setHtml(`<pre class="text-red-500">Error: ${(e as any).message}</pre>`);
+        // If highlighting fails (e.g., unknown language), we leave html as null
+        // so it falls back to the plain text renderer.
+        setHtml(null);
       }
     });
     return () => {
-      isMounted = false;
+      isMounted = false; 
     };
   }, [content, language, theme]);
 

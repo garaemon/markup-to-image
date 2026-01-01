@@ -57,7 +57,7 @@ export function MarkupPreview({ state, onAutoWidthChange }: MarkupPreviewProps) 
     };
     loadTheme();
     return () => {
-      isMounted = false;
+      isMounted = false; 
     };
   }, [state.theme]);
 

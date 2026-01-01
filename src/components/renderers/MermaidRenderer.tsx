@@ -36,7 +36,7 @@ export function MermaidRenderer({ content }: { content: string }) {
 
     render();
     return () => {
-      isMounted = false;
+      isMounted = false; 
     };
   }, [content]);
 

@@ -36,11 +36,11 @@ export function MarkupEditor({ state, onChange, autoWidth }: MarkupEditorProps) 
     let mounted = true;
     getHighlighter().then((h) => {
       if (mounted) {
-        setHighlighter(h);
+        setHighlighter(h); 
       }
     });
     return () => {
-      mounted = false;
+      mounted = false; 
     };
   }, []);
 

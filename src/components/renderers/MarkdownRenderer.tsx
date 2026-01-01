@@ -40,7 +40,7 @@ const CodeBlock = ({ inline, className, children, theme, showLineNumbers, ...pro
       }
     });
     return () => {
-      isMounted = false;
+      isMounted = false; 
     };
   }, [code, lang, inline, theme]);
 
