@@ -104,7 +104,9 @@ export function encodeState(state: MarkupState): string {
 
   (Object.entries(URL_PARAMETERS) as [keyof MarkupState, UrlParameterInfo][]).forEach(([name, info]) => {
     const value = state[name];
-    if (value === undefined) return;
+    if (value === undefined) {
+      return;
+    }
 
     let encodedValue: string;
     if (name === 'content') {
@@ -125,7 +127,9 @@ export function decodeState(searchParams: URLSearchParams): MarkupState {
 
   (Object.entries(URL_PARAMETERS) as [keyof MarkupState, UrlParameterInfo][]).forEach(([name, info]) => {
     const rawValue = searchParams.get(info.key);
-    if (rawValue === null) return;
+    if (rawValue === null) {
+      return;
+    }
 
     if (name === 'content') {
       state[name] = LZString.decompressFromEncodedURIComponent(rawValue) || defaultState.content;

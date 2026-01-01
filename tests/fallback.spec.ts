@@ -13,7 +13,8 @@ test('renders plain text when invalid language is specified', async ({ page }) =
 
   // The content should be visible in the page
   // We verify that the text content is present
-  await expect(page.getByText(uniqueText)).toBeVisible();
+  // We target the code element inside a pre that is NOT hidden (editor uses hidden pre for highlighting)
+  await expect(page.locator('pre:not([aria-hidden="true"]) > code').filter({ hasText: uniqueText })).toBeVisible();
 
   // Ensure no crash or error message is dominating (optional heuristic)
   // expect(page.getByText('Application Error')).not.toBeVisible();

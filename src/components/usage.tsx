@@ -166,7 +166,7 @@ export function Usage() {
                 <td className="px-3 py-2 font-mono font-bold text-primary">txt</td>
                 <td className="px-3 py-2 font-mono text-muted-foreground">content (alt)</td>
                 <td className="px-3 py-2">
-                  <span className="text-foreground">Uncompressed text content (alias for 'text'). Falls back to this if 'c' is missing.</span>
+                  <span className="text-foreground">Uncompressed text content (alias for &apos;text&apos;). Falls back to this if &apos;c&apos; is missing.</span>
                 </td>
               </tr>
             </tbody>
