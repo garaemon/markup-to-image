@@ -36,12 +36,12 @@ export function MarkupEditor({ state, onChange, autoWidth }: MarkupEditorProps) 
     let mounted = true;
     getHighlighter().then((h) => {
       if (mounted) {
- setHighlighter(h);
-}
+        setHighlighter(h);
+      }
     });
     return () => {
- mounted = false;
-};
+      mounted = false;
+    };
   }, []);
 
   const currentExamples = state.language === 'code' 
@@ -140,10 +140,10 @@ export function MarkupEditor({ state, onChange, autoWidth }: MarkupEditorProps) 
                   const isExample = allExamples.some(ex => ex.content === state.content);
 
                   if (isExample || state.content === defaultState.content) {
-                     const nextExamples = CODE_EXAMPLES[v] || [];
-                     if (nextExamples.length > 0) {
-                        updates.content = nextExamples[0].content;
-                     }
+                    const nextExamples = CODE_EXAMPLES[v] || [];
+                    if (nextExamples.length > 0) {
+                      updates.content = nextExamples[0].content;
+                    }
                   }
 
                   onChange(updates);
@@ -254,8 +254,8 @@ export function MarkupEditor({ state, onChange, autoWidth }: MarkupEditorProps) 
                 onChange={(e) => {
                   const val = parseInt(e.target.value);
                   if (!isNaN(val)) {
-onChange({ width: val });
-}
+                    onChange({ width: val });
+                  }
                 }}
                 className="w-20 h-8"
               />
@@ -263,9 +263,9 @@ onChange({ width: val });
             </div>
           )}
           {state.width !== 'auto' && (
-             <p className="text-[10px] text-muted-foreground italic">
+            <p className="text-[10px] text-muted-foreground italic">
                 Export size: {Math.round(state.width * state.scale)}px wide
-             </p>
+            </p>
           )}
         </div>
 

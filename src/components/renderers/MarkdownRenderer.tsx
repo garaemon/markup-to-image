@@ -13,35 +13,35 @@ const CodeBlock = ({ inline, className, children, theme, showLineNumbers, ...pro
 
   useEffect(() => {
     if (inline) {
-return;
-}
+      return;
+    }
 
     let isMounted = true;
     const targetTheme = theme === 'light' ? 'github-light' :
-                        theme === 'dark' ? 'github-dark' :
-                        theme;
+      theme === 'dark' ? 'github-dark' :
+        theme;
 
     getHighlighter().then(highlighter => {
-       if (!isMounted) {
-return;
-}
-       try {
-         const loadedLangs = highlighter.getLoadedLanguages();
-         const targetLang = loadedLangs.includes(lang) ? lang : 'text';
+      if (!isMounted) {
+        return;
+      }
+      try {
+        const loadedLangs = highlighter.getLoadedLanguages();
+        const targetLang = loadedLangs.includes(lang) ? lang : 'text';
          
-         const out = highlighter.codeToHtml(code, {
-           lang: targetLang,
-           theme: targetTheme
-         });
-         setHtml(out);
-       } catch (e) {
-         console.error(e);
-         setHtml(null); 
-       }
+        const out = highlighter.codeToHtml(code, {
+          lang: targetLang,
+          theme: targetTheme
+        });
+        setHtml(out);
+      } catch (e) {
+        console.error(e);
+        setHtml(null);
+      }
     });
     return () => {
- isMounted = false;
-};
+      isMounted = false;
+    };
   }, [code, lang, inline, theme]);
 
   if (inline) {
