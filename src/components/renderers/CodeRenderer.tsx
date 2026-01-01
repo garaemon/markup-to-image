@@ -12,7 +12,9 @@ export function CodeRenderer({ content, language, theme, showLineNumbers }: { co
                         theme;
 
     getHighlighter().then(highlighter => {
-       if (!isMounted) {return;}
+       if (!isMounted) {
+return;
+}
        try {
          const out = highlighter.codeToHtml(content, {
            lang: language,
@@ -25,7 +27,9 @@ export function CodeRenderer({ content, language, theme, showLineNumbers }: { co
          setHtml(`<pre class="text-red-500">Error: ${(e as any).message}</pre>`); 
        }
     });
-    return () => { isMounted = false; };
+    return () => {
+ isMounted = false;
+};
   }, [content, language, theme]);
 
   if (!html) {

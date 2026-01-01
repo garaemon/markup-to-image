@@ -12,7 +12,9 @@ const CodeBlock = ({ inline, className, children, theme, showLineNumbers, ...pro
   const [html, setHtml] = useState<string | null>(null);
 
   useEffect(() => {
-    if (inline) {return;}
+    if (inline) {
+return;
+}
 
     let isMounted = true;
     const targetTheme = theme === 'light' ? 'github-light' :
@@ -20,7 +22,9 @@ const CodeBlock = ({ inline, className, children, theme, showLineNumbers, ...pro
                         theme;
 
     getHighlighter().then(highlighter => {
-       if (!isMounted) {return;}
+       if (!isMounted) {
+return;
+}
        try {
          const loadedLangs = highlighter.getLoadedLanguages();
          const targetLang = loadedLangs.includes(lang) ? lang : 'text';
@@ -35,7 +39,9 @@ const CodeBlock = ({ inline, className, children, theme, showLineNumbers, ...pro
          setHtml(null); 
        }
     });
-    return () => { isMounted = false; };
+    return () => {
+ isMounted = false;
+};
   }, [code, lang, inline, theme]);
 
   if (inline) {

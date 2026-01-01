@@ -22,7 +22,9 @@ export function MarkupPreview({ state, onAutoWidthChange }: MarkupPreviewProps) 
   const [themeColors, setThemeColors] = useState<{ bg: string, fg: string }>({ bg: '#ffffff', fg: '#000000' })
 
   useEffect(() => {
-    if (!previewRef.current || state.width !== 'auto' || !onAutoWidthChange) {return;}
+    if (!previewRef.current || state.width !== 'auto' || !onAutoWidthChange) {
+return;
+}
 
     const observer = new ResizeObserver((entries) => {
       for (const entry of entries) {
@@ -54,11 +56,15 @@ export function MarkupPreview({ state, onAutoWidthChange }: MarkupPreviewProps) 
         }
     };
     loadTheme();
-    return () => { isMounted = false; };
+    return () => {
+ isMounted = false;
+};
   }, [state.theme]);
 
   const handleCopyPng = async () => {
-    if (!previewRef.current) {return}
+    if (!previewRef.current) {
+return
+}
     try {
       const blob = await domToBlob(previewRef.current, { 
         scale: state.scale, 
@@ -84,7 +90,9 @@ export function MarkupPreview({ state, onAutoWidthChange }: MarkupPreviewProps) 
   }
 
   const handleDownloadPng = async () => {
-    if (!previewRef.current) {return}
+    if (!previewRef.current) {
+return
+}
     try {
       const dataUrl = await domToPng(previewRef.current, { 
         scale: state.scale, 
@@ -102,7 +110,9 @@ export function MarkupPreview({ state, onAutoWidthChange }: MarkupPreviewProps) 
   }
 
   const handleDownloadSvg = async () => {
-    if (!previewRef.current) {return}
+    if (!previewRef.current) {
+return
+}
     try {
       const dataUrl = await domToSvg(previewRef.current, { 
         backgroundColor: state.transparent ? undefined : themeColors.bg 

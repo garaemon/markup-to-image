@@ -35,9 +35,13 @@ export function MarkupEditor({ state, onChange, autoWidth }: MarkupEditorProps) 
   useEffect(() => {
     let mounted = true;
     getHighlighter().then((h) => {
-      if (mounted) { setHighlighter(h); }
+      if (mounted) {
+ setHighlighter(h);
+}
     });
-    return () => { mounted = false; };
+    return () => {
+ mounted = false;
+};
   }, []);
 
   const currentExamples = state.language === 'code' 
@@ -249,7 +253,9 @@ export function MarkupEditor({ state, onChange, autoWidth }: MarkupEditorProps) 
                 value={state.width}
                 onChange={(e) => {
                   const val = parseInt(e.target.value);
-                  if (!isNaN(val)) {onChange({ width: val });}
+                  if (!isNaN(val)) {
+onChange({ width: val });
+}
                 }}
                 className="w-20 h-8"
               />
