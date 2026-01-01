@@ -20,26 +20,28 @@ export function MermaidRenderer({ content }: { content: string }) {
         // Checking types or assuming string based on recent versions.
         const result = await mermaid.render(id, content);
         if (isMounted) {
-            setSvg(result.svg);
-            setError(null);
+          setSvg(result.svg);
+          setError(null);
         }
       } catch (e: unknown) {
         if (isMounted) {
-            if (e instanceof Error) {
-                setError(e.message);
-            } else {
-                setError(String(e));
-            }
+          if (e instanceof Error) {
+            setError(e.message);
+          } else {
+            setError(String(e));
+          }
         }
       }
     };
 
     render();
-    return () => { isMounted = false; };
+    return () => {
+      isMounted = false;
+    };
   }, [content]);
 
   if (error) {
-     return <div className="text-red-500 font-mono text-sm p-4 whitespace-pre-wrap">{error}</div>;
+    return <div className="text-red-500 font-mono text-sm p-4 whitespace-pre-wrap">{error}</div>;
   }
 
   return <div dangerouslySetInnerHTML={{ __html: svg }} className="flex justify-center" />;

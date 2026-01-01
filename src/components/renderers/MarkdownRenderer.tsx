@@ -12,30 +12,36 @@ const CodeBlock = ({ inline, className, children, theme, showLineNumbers, ...pro
   const [html, setHtml] = useState<string | null>(null);
 
   useEffect(() => {
-    if (inline) return;
+    if (inline) {
+      return;
+    }
 
     let isMounted = true;
     const targetTheme = theme === 'light' ? 'github-light' :
-                        theme === 'dark' ? 'github-dark' :
-                        theme;
+      theme === 'dark' ? 'github-dark' :
+        theme;
 
     getHighlighter().then(highlighter => {
-       if (!isMounted) return;
-       try {
-         const loadedLangs = highlighter.getLoadedLanguages();
-         const targetLang = loadedLangs.includes(lang) ? lang : 'text';
+      if (!isMounted) {
+        return;
+      }
+      try {
+        const loadedLangs = highlighter.getLoadedLanguages();
+        const targetLang = loadedLangs.includes(lang) ? lang : 'text';
          
-         const out = highlighter.codeToHtml(code, {
-           lang: targetLang,
-           theme: targetTheme
-         });
-         setHtml(out);
-       } catch (e) {
-         console.error(e);
-         setHtml(null); 
-       }
+        const out = highlighter.codeToHtml(code, {
+          lang: targetLang,
+          theme: targetTheme
+        });
+        setHtml(out);
+      } catch (e) {
+        console.error(e);
+        setHtml(null);
+      }
     });
-    return () => { isMounted = false; };
+    return () => {
+      isMounted = false;
+    };
   }, [code, lang, inline, theme]);
 
   if (inline) {

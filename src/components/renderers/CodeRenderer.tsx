@@ -8,24 +8,37 @@ export function CodeRenderer({ content, language, theme, showLineNumbers }: { co
   useEffect(() => {
     let isMounted = true;
     const targetTheme = theme === 'light' ? 'github-light' : 
-                        theme === 'dark' ? 'github-dark' : 
-                        theme;
+      theme === 'dark' ? 'github-dark' :
+        theme;
 
     getHighlighter().then(highlighter => {
-       if (!isMounted) return;
-       try {
-         const out = highlighter.codeToHtml(content, {
-           lang: language,
-           theme: targetTheme
-         });
-         setHtml(out);
-       } catch (e) {
-         console.error(e);
-         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-         setHtml(`<pre class="text-red-500">Error: ${(e as any).message}</pre>`); 
-       }
+      if (!isMounted) {
+        return;
+      }
+      try {
+        const out = highlighter.codeToHtml(content, {
+          lang: language,
+          theme: targetTheme
+        });
+        setHtml(out);
+      } catch (e) {
+        console.warn(e);
+        try {
+          const out = highlighter.codeToHtml(content, {
+            lang: 'text',
+            theme: targetTheme
+          });
+          setHtml(out);
+        } catch (e2) {
+          console.error(e2);
+          // Fallback to basic rendering if even text fails
+          setHtml(`<pre><code>${content}</code></pre>`);
+        }
+      }
     });
-    return () => { isMounted = false; };
+    return () => {
+      isMounted = false;
+    };
   }, [content, language, theme]);
 
   if (!html) {

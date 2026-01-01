@@ -7,7 +7,7 @@ export const SUPPORTED_LANGUAGES = [
   'markdown', 'yaml', 'tsx', 'jsx', 'go', 'rust', 'java', 'c', 'cpp',
   'bibtex', 'latex', 'ruby', 'lisp', 'emacs-lisp', 'kotlin', 'swift', 
   'mermaid', 'objective-c', 'perl', 'php', 'r', 'toml', 'vhdl', 'system-verilog',
-  'protobuf', 'rosmsg', 'cmake', 'makefile'
+  'protobuf', 'rosmsg', 'cmake', 'makefile', 'text'
 ];
 
 export const SUPPORTED_THEMES = [
@@ -23,8 +23,8 @@ export function getHighlighter() {
       themes: SUPPORTED_THEMES,
       langs: SUPPORTED_LANGUAGES,
     }).catch(e => {
-        console.error('Failed to create highlighter:', e);
-        throw e;
+      console.error('Failed to create highlighter:', e);
+      throw e;
     });
   }
   return highlighterPromise;
