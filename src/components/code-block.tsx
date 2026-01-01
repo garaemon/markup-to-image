@@ -20,46 +20,40 @@ export function CodeBlock({ code, language, className }: CodeBlockProps) {
   }, []);
 
   useEffect(() => {
-    if (!mounted) {
-      return;
-    }
+    if (!mounted) return;
 
     let isMounted = true;
     const theme = resolvedTheme === 'dark' ? 'github-dark' : 'github-light';
 
     getHighlighter().then(highlighter => {
-      if (!isMounted) {
-        return;
-      }
-      try {
-        const out = highlighter.codeToHtml(code, {
-          lang: language,
-          theme: theme
-        });
-        setHtml(out);
-      } catch (e) {
-        console.error(e);
-        setHtml(null); // Fallback to plain text on error
-      }
+       if (!isMounted) return;
+       try {
+         const out = highlighter.codeToHtml(code, {
+           lang: language,
+           theme: theme
+         });
+         setHtml(out);
+       } catch (e) {
+         console.error(e);
+         setHtml(null); // Fallback to plain text on error
+       }
     });
-    return () => {
-      isMounted = false; 
-    };
+    return () => { isMounted = false; };
   }, [code, language, resolvedTheme, mounted]);
 
   if (!mounted) {
     return (
-      <pre className={cn("font-mono text-xs", className)}>
-        {code}
-      </pre>
+        <pre className={cn("font-mono text-xs", className)}>
+            {code}
+        </pre>
     );
   }
 
   if (!html) {
     return (
-      <pre className={cn("font-mono text-xs", className)}>
-        {code}
-      </pre>
+        <pre className={cn("font-mono text-xs", className)}>
+            {code}
+        </pre>
     );
   }
 

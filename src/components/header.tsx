@@ -15,15 +15,15 @@ export function Header({ onShare }: HeaderProps) {
         <h1 className="text-xl font-bold">Markup to Image</h1>
       </div>
       <div className="flex items-center gap-2">
-        <Button variant="ghost" size="icon" asChild>
-          <a href="https://github.com/garaemon/markup-to-image" target="_blank" rel="noopener noreferrer">
-            <Github className="w-5 h-5" />
-          </a>
-        </Button>
-        <Button variant="outline" size="sm" onClick={onShare}>
-          <Share2 className="w-4 h-4 mr-2" />
+         <Button variant="ghost" size="icon" asChild>
+           <a href="https://github.com/garaemon/markup-to-image" target="_blank" rel="noopener noreferrer">
+             <Github className="w-5 h-5" />
+           </a>
+         </Button>
+         <Button variant="outline" size="sm" onClick={onShare}>
+           <Share2 className="w-4 h-4 mr-2" />
            Share
-        </Button>
+         </Button>
       </div>
     </header>
   )

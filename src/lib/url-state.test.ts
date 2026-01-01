@@ -45,14 +45,24 @@ describe('url-state', () => {
     expect(decoded.content).toBe('Hello Raw World');
   });
 
-  it('should prioritize LZ-compressed content over "text" parameter', () => {
+  it('should support raw text content via "txt" parameter', () => {
+    const params = new URLSearchParams();
+    params.set('txt', 'Hello Short Raw World');
+
+    const decoded = decodeState(params);
+
+    expect(decoded.content).toBe('Hello Short Raw World');
+  });
+
+  it('should prioritize LZ-compressed content over "txt" parameter', () => {
+    const params = new URLSearchParams();
     // LZ compressed 'Compressed Content' (roughly)
     // We rely on encodeState to get valid compressed string for test
     const compressedState = encodeState({ ...defaultState, content: 'Compressed Content' });
     const compressedParams = new URLSearchParams(compressedState);
 
     // Add text param
-    compressedParams.set('text', 'Raw Content');
+    compressedParams.set('txt', 'Raw Content');
 
     const decoded = decodeState(compressedParams);
 

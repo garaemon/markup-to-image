@@ -30,7 +30,7 @@ export function Usage() {
                     ((derived-mode-p 'latex-mode) "latex")
                     (t "code")))
         (code-lang (replace-regexp-in-string "-mode$" "" (symbol-name major-mode))))
-    (browse-url (format "%s/?l=%s&cl=%s&text=%s" url-base lang code-lang content))))`;
+    (browse-url (format "%s/?l=%s&cl=%s&txt=%s" url-base lang code-lang content))))`;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(emacsCode);
@@ -110,7 +110,7 @@ export function Usage() {
                 Add the following function to your Emacs configuration to share selected regions directly to this service.
                 <br />
                 <span className="text-xs text-muted-foreground/80">
-                  Note: The code sends uncompressed text via the `text` parameter. The application will automatically compress it upon loading.
+                  Note: The code sends uncompressed text via the `txt` parameter. The application will automatically compress it upon loading.
                 </span>
               </p>
               <div className="relative group">
@@ -161,6 +161,14 @@ export function Usage() {
                   </td>
                 </tr>
               ))}
+              {/* Manual entry for the 'txt' parameter as it's not part of the state object but valid in URL */}
+              <tr className="hover:bg-muted/30 transition-colors">
+                <td className="px-3 py-2 font-mono font-bold text-primary">txt</td>
+                <td className="px-3 py-2 font-mono text-muted-foreground">content (alt)</td>
+                <td className="px-3 py-2">
+                  <span className="text-foreground">Uncompressed text content (alias for 'text'). Falls back to this if 'c' is missing.</span>
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>

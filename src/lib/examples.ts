@@ -16,8 +16,8 @@ export const EXAMPLES: Record<Language, { name: string; content: string }[]> = {
 \\end{aligned}`
     },
     {
-      name: "Matrix",
-      content: `A = \\begin{pmatrix}
+        name: "Matrix",
+        content: `A = \\begin{pmatrix}
 a & b \\\\
 c & d
 \\end{pmatrix}`
@@ -432,8 +432,8 @@ g.say_hi`
 }`
     },
     {
-      name: "Class",
-      content: `class Person(val name: String) {
+        name: "Class",
+        content: `class Person(val name: String) {
     fun greet() {
         println("Hello, $name")
     }
@@ -446,8 +446,8 @@ g.say_hi`
       content: `print("Hello, World!")`
     },
     {
-      name: "Struct",
-      content: `struct Person {
+        name: "Struct",
+        content: `struct Person {
     var name: String
     
     func greet() {

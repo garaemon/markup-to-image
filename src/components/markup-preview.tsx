@@ -22,9 +22,7 @@ export function MarkupPreview({ state, onAutoWidthChange }: MarkupPreviewProps) 
   const [themeColors, setThemeColors] = useState<{ bg: string, fg: string }>({ bg: '#ffffff', fg: '#000000' })
 
   useEffect(() => {
-    if (!previewRef.current || state.width !== 'auto' || !onAutoWidthChange) {
-      return;
-    }
+    if (!previewRef.current || state.width !== 'auto' || !onAutoWidthChange) return;
 
     const observer = new ResizeObserver((entries) => {
       for (const entry of entries) {
@@ -41,30 +39,26 @@ export function MarkupPreview({ state, onAutoWidthChange }: MarkupPreviewProps) 
   useEffect(() => {
     let isMounted = true;
     const loadTheme = async () => {
-      // Map legacy themes to shiki themes
-      const themeName = state.theme === 'light' ? 'github-light' :
-        state.theme === 'dark' ? 'github-dark' :
-          state.theme;
+        // Map legacy themes to shiki themes
+        const themeName = state.theme === 'light' ? 'github-light' :
+                         state.theme === 'dark' ? 'github-dark' :
+                         state.theme;
         
-      try {
-        const colors = await getThemeColors(themeName);
-        if (isMounted) {
-          setThemeColors(colors);
+        try {
+            const colors = await getThemeColors(themeName);
+            if (isMounted) {
+                setThemeColors(colors);
+            }
+        } catch (e) {
+            console.error('Failed to load theme colors', e);
         }
-      } catch (e) {
-        console.error('Failed to load theme colors', e);
-      }
     };
     loadTheme();
-    return () => {
-      isMounted = false;
-    };
+    return () => { isMounted = false; };
   }, [state.theme]);
 
   const handleCopyPng = async () => {
-    if (!previewRef.current) {
-      return
-    }
+    if (!previewRef.current) return
     try {
       const blob = await domToBlob(previewRef.current, { 
         scale: state.scale, 
@@ -90,9 +84,7 @@ export function MarkupPreview({ state, onAutoWidthChange }: MarkupPreviewProps) 
   }
 
   const handleDownloadPng = async () => {
-    if (!previewRef.current) {
-      return
-    }
+    if (!previewRef.current) return
     try {
       const dataUrl = await domToPng(previewRef.current, { 
         scale: state.scale, 
@@ -110,9 +102,7 @@ export function MarkupPreview({ state, onAutoWidthChange }: MarkupPreviewProps) 
   }
 
   const handleDownloadSvg = async () => {
-    if (!previewRef.current) {
-      return
-    }
+    if (!previewRef.current) return
     try {
       const dataUrl = await domToSvg(previewRef.current, { 
         backgroundColor: state.transparent ? undefined : themeColors.bg 
@@ -140,81 +130,81 @@ export function MarkupPreview({ state, onAutoWidthChange }: MarkupPreviewProps) 
 
   return (
     <div className="flex flex-col h-full gap-4">
-      <div className="flex justify-end gap-2">
-        <Button size="sm" variant="secondary" className="hover:bg-secondary-foreground/10" onClick={handleCopyPng}>
-          <Copy className="w-4 h-4 mr-2" /> Copy PNG
-        </Button>
-        <Button size="sm" variant="outline" onClick={handleDownloadPng}>
-          <Download className="w-4 h-4 mr-2" /> PNG
-        </Button>
-        <Button size="sm" variant="outline" onClick={handleDownloadSvg}>
-          <FileCode className="w-4 h-4 mr-2" /> SVG
-        </Button>
-        <Button size="sm" variant="outline" onClick={() => handleDownloadPdf()}>
-          <FileText className="w-4 h-4 mr-2" /> PDF
-        </Button>
-      </div>
-        
-      <div className={cn(
-        "flex-1 flex overflow-auto rounded-lg p-8",
-        isDarkTheme ? "bg-neutral-900" : "bg-secondary/50"
-      )}>
-        <div
-          ref={previewRef}
-          style={{
-            borderRadius: `${state.borderRadius}px`,
-            width: state.width === 'auto' ? 'auto' : `${state.width}px`,
-            backgroundColor: state.transparent ? 'transparent' : themeColors.bg,
-            color: themeColors.fg,
-            // Override prose colors to match theme
-            '--tw-prose-body': themeColors.fg,
-            '--tw-prose-headings': themeColors.fg,
-            '--tw-prose-lead': themeColors.fg,
-            '--tw-prose-links': themeColors.fg,
-            '--tw-prose-bold': themeColors.fg,
-            '--tw-prose-counters': themeColors.fg,
-            '--tw-prose-bullets': themeColors.fg,
-            '--tw-prose-hr': themeColors.fg,
-            '--tw-prose-quotes': themeColors.fg,
-            '--tw-prose-quote-borders': themeColors.fg,
-            '--tw-prose-captions': themeColors.fg,
-            '--tw-prose-code': themeColors.fg,
-            '--tw-prose-pre-code': themeColors.fg,
-            '--tw-prose-pre-bg': themeColors.bg,
-            '--tw-prose-th-borders': themeColors.fg,
-            '--tw-prose-td-borders': themeColors.fg,
-            // Override prose-invert colors to match theme
-            '--tw-prose-invert-body': themeColors.fg,
-            '--tw-prose-invert-headings': themeColors.fg,
-            '--tw-prose-invert-lead': themeColors.fg,
-            '--tw-prose-invert-links': themeColors.fg,
-            '--tw-prose-invert-bold': themeColors.fg,
-            '--tw-prose-invert-counters': themeColors.fg,
-            '--tw-prose-invert-bullets': themeColors.fg,
-            '--tw-prose-invert-hr': themeColors.fg,
-            '--tw-prose-invert-quotes': themeColors.fg,
-            '--tw-prose-invert-quote-borders': themeColors.fg,
-            '--tw-prose-invert-captions': themeColors.fg,
-            '--tw-prose-invert-code': themeColors.fg,
-            '--tw-prose-invert-pre-code': themeColors.fg,
-            '--tw-prose-invert-pre-bg': themeColors.bg,
-            '--tw-prose-invert-th-borders': themeColors.fg,
-            '--tw-prose-invert-td-borders': themeColors.fg,
-          } as React.CSSProperties}
-          className={cn(
-            "min-w-[300px] shadow-xl transition-all duration-300 w-fit m-auto flex-shrink-0 fit-content",
-            state.window ? "mockup-window border border-neutral-200 dark:border-neutral-800" : "",
-            isDarkTheme ? "dark" : ""
-          )}
-        >
-          <div style={{ padding: `${state.padding}px` }}>
-            {state.language === 'latex' && <LatexRenderer content={state.content} />}
-            {state.language === 'mermaid' && <MermaidRenderer content={state.content} />}
-            {state.language === 'code' && <CodeRenderer content={state.content} language={state.codeLanguage} theme={state.theme} showLineNumbers={state.showLineNumbers} />}
-            {state.language === 'markdown' && <MarkdownRenderer content={state.content} theme={state.theme} showLineNumbers={state.showLineNumbers} />}
-          </div>
+        <div className="flex justify-end gap-2">
+            <Button size="sm" variant="secondary" className="hover:bg-secondary-foreground/10" onClick={handleCopyPng}>
+                <Copy className="w-4 h-4 mr-2" /> Copy PNG
+            </Button>
+            <Button size="sm" variant="outline" onClick={handleDownloadPng}>
+                <Download className="w-4 h-4 mr-2" /> PNG
+            </Button>
+            <Button size="sm" variant="outline" onClick={handleDownloadSvg}>
+                <FileCode className="w-4 h-4 mr-2" /> SVG
+            </Button>
+            <Button size="sm" variant="outline" onClick={() => handleDownloadPdf()}>
+                <FileText className="w-4 h-4 mr-2" /> PDF
+            </Button>
         </div>
-      </div>
+        
+        <div className={cn(
+            "flex-1 flex overflow-auto rounded-lg p-8",
+            isDarkTheme ? "bg-neutral-900" : "bg-secondary/50"
+        )}>
+            <div
+                ref={previewRef}
+                style={{
+                    borderRadius: `${state.borderRadius}px`,
+                    width: state.width === 'auto' ? 'auto' : `${state.width}px`,
+                    backgroundColor: state.transparent ? 'transparent' : themeColors.bg,
+                    color: themeColors.fg,
+                    // Override prose colors to match theme
+                    '--tw-prose-body': themeColors.fg,
+                    '--tw-prose-headings': themeColors.fg,
+                    '--tw-prose-lead': themeColors.fg,
+                    '--tw-prose-links': themeColors.fg,
+                    '--tw-prose-bold': themeColors.fg,
+                    '--tw-prose-counters': themeColors.fg,
+                    '--tw-prose-bullets': themeColors.fg,
+                    '--tw-prose-hr': themeColors.fg,
+                    '--tw-prose-quotes': themeColors.fg,
+                    '--tw-prose-quote-borders': themeColors.fg,
+                    '--tw-prose-captions': themeColors.fg,
+                    '--tw-prose-code': themeColors.fg,
+                    '--tw-prose-pre-code': themeColors.fg,
+                    '--tw-prose-pre-bg': themeColors.bg,
+                    '--tw-prose-th-borders': themeColors.fg,
+                    '--tw-prose-td-borders': themeColors.fg,
+                    // Override prose-invert colors to match theme
+                    '--tw-prose-invert-body': themeColors.fg,
+                    '--tw-prose-invert-headings': themeColors.fg,
+                    '--tw-prose-invert-lead': themeColors.fg,
+                    '--tw-prose-invert-links': themeColors.fg,
+                    '--tw-prose-invert-bold': themeColors.fg,
+                    '--tw-prose-invert-counters': themeColors.fg,
+                    '--tw-prose-invert-bullets': themeColors.fg,
+                    '--tw-prose-invert-hr': themeColors.fg,
+                    '--tw-prose-invert-quotes': themeColors.fg,
+                    '--tw-prose-invert-quote-borders': themeColors.fg,
+                    '--tw-prose-invert-captions': themeColors.fg,
+                    '--tw-prose-invert-code': themeColors.fg,
+                    '--tw-prose-invert-pre-code': themeColors.fg,
+                    '--tw-prose-invert-pre-bg': themeColors.bg,
+                    '--tw-prose-invert-th-borders': themeColors.fg,
+                    '--tw-prose-invert-td-borders': themeColors.fg,
+                } as React.CSSProperties}
+                className={cn(
+                    "min-w-[300px] shadow-xl transition-all duration-300 w-fit m-auto flex-shrink-0 fit-content",
+                    state.window ? "mockup-window border border-neutral-200 dark:border-neutral-800" : "",
+                    isDarkTheme ? "dark" : ""
+                )}
+            >
+                <div style={{ padding: `${state.padding}px` }}>
+                    {state.language === 'latex' && <LatexRenderer content={state.content} />}
+                    {state.language === 'mermaid' && <MermaidRenderer content={state.content} />}
+                    {state.language === 'code' && <CodeRenderer content={state.content} language={state.codeLanguage} theme={state.theme} showLineNumbers={state.showLineNumbers} />}
+                    {state.language === 'markdown' && <MarkdownRenderer content={state.content} theme={state.theme} showLineNumbers={state.showLineNumbers} />}
+                </div>
+            </div>
+        </div>
     </div>
   )
 }

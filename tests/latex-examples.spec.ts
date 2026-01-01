@@ -22,9 +22,9 @@ test.describe('LaTeX Examples', () => {
     // Our renderer catches error and shows red text.
     const error = page.locator('.text-red-500');
     if (await error.isVisible()) {
-      const errorText = await error.textContent();
-      console.log('Maxwell Error:', errorText);
-      throw new Error(`Maxwell example failed to render: ${errorText}`);
+        const errorText = await error.textContent();
+        console.log('Maxwell Error:', errorText);
+        throw new Error(`Maxwell example failed to render: ${errorText}`);
     }
     
     await expect(page.locator('.katex')).toBeVisible();
@@ -35,9 +35,9 @@ test.describe('LaTeX Examples', () => {
     
     const error = page.locator('.text-red-500');
     if (await error.isVisible()) {
-      const errorText = await error.textContent();
-      console.log('Matrix Error:', errorText);
-      throw new Error(`Matrix example failed to render: ${errorText}`);
+        const errorText = await error.textContent();
+        console.log('Matrix Error:', errorText);
+        throw new Error(`Matrix example failed to render: ${errorText}`);
     }
 
     await expect(page.locator('.katex')).toBeVisible();
