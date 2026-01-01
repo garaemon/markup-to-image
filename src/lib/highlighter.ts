@@ -23,8 +23,8 @@ export function getHighlighter() {
       themes: SUPPORTED_THEMES,
       langs: SUPPORTED_LANGUAGES,
     }).catch(e => {
-        console.error('Failed to create highlighter:', e);
-        throw e;
+      console.error('Failed to create highlighter:', e);
+      throw e;
     });
   }
   return highlighterPromise;

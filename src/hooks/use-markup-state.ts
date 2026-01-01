@@ -23,7 +23,9 @@ export function useMarkupState() {
   const debouncedState = useDebounce(state, 500);
 
   useEffect(() => {
-    if (!isLoaded) return;
+    if (!isLoaded) {
+      return;
+    }
     
     const queryString = encodeState(debouncedState);
     router.replace(`?${queryString}`, { scroll: false });

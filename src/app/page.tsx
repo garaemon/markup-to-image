@@ -54,14 +54,14 @@ function MarkupApp() {
             // Mobile: show only if editor is active
             activeTab === 'preview' ? 'hidden md:block' : 'block'
           )}>
-             <MarkupEditor state={state} onChange={updateState} autoWidth={autoWidth} />
+            <MarkupEditor state={state} onChange={updateState} autoWidth={autoWidth} />
           </div>
           <div className={cn(
             "w-full md:w-1/2 p-6 overflow-hidden bg-muted/30 transition-all",
             // Mobile: show only if preview is active
             activeTab === 'editor' ? 'hidden md:block' : 'block'
           )}>
-             <MarkupPreview state={state} onAutoWidthChange={setAutoWidth} />
+            <MarkupPreview state={state} onAutoWidthChange={setAutoWidth} />
           </div>
         </main>
       </div>
