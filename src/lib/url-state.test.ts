@@ -46,7 +46,6 @@ describe('url-state', () => {
   });
 
   it('should prioritize LZ-compressed content over "text" parameter', () => {
-    const params = new URLSearchParams();
     // LZ compressed 'Compressed Content' (roughly)
     // We rely on encodeState to get valid compressed string for test
     const compressedState = encodeState({ ...defaultState, content: 'Compressed Content' });
