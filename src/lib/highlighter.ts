@@ -30,6 +30,19 @@ export function getHighlighter() {
   return highlighterPromise;
 }
 
+/**
+ * Removes italic font styles from Shiki-highlighted HTML.
+ *
+ * The editor overlays a transparent textarea on top of the highlighted
+ * markup, so both layers must have identical text metrics. Italic glyphs
+ * can have different advance widths than upright glyphs, which makes the
+ * caret drift away from the visible text. Stripping the italic style
+ * keeps the two layers aligned.
+ */
+export function removeItalicFontStyles(html: string): string {
+  return html.replace(/font-style:\s*italic;?\s*/g, '');
+}
+
 export async function getThemeColors(theme: string) {
   const highlighter = await getHighlighter();
   const themeReg = highlighter.getTheme(theme);

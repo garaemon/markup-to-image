@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Button } from "@/components/ui/button"
 import { MarkupState, Language, Theme, defaultState } from "@/lib/url-state"
 import { EXAMPLES, CODE_EXAMPLES } from "@/lib/examples"
-import { SUPPORTED_LANGUAGES, getHighlighter } from "@/lib/highlighter"
+import { SUPPORTED_LANGUAGES, getHighlighter, removeItalicFontStyles } from "@/lib/highlighter"
 import Editor from 'react-simple-code-editor';
 import { cn } from "@/lib/utils"
 import { useEffect, useState } from "react"
@@ -77,7 +77,11 @@ export function MarkupEditor({ state, onChange, autoWidth }: MarkupEditorProps) 
       // Extract inner HTML from <pre><code>...</code></pre>
       // Shiki output: <pre ...><code ...>CONTENT</code></pre>
       const match = html.match(/<code[^>]*>([\s\S]*?)<\/code>/);
-      return match ? match[1] : html;
+      const innerHtml = match ? match[1] : html;
+
+      // Italic tokens (e.g. invalid HTML syntax, markdown emphasis) change
+      // glyph widths and make the caret drift from the visible text.
+      return removeItalicFontStyles(innerHtml);
     } catch (e) {
       console.error('Highlight error:', e);
       // Fallback to simple escaping on error
